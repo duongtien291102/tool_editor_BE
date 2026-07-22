@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+
+COPY ["src/AiVideoStudio.Api/AiVideoStudio.Api.csproj", "src/AiVideoStudio.Api/"]
+COPY ["src/AiVideoStudio.Application/AiVideoStudio.Application.csproj", "src/AiVideoStudio.Application/"]
+COPY ["src/AiVideoStudio.Domain/AiVideoStudio.Domain.csproj", "src/AiVideoStudio.Domain/"]
+COPY ["src/AiVideoStudio.Infrastructure/AiVideoStudio.Infrastructure.csproj", "src/AiVideoStudio.Infrastructure/"]
+COPY ["src/AiVideoStudio.Shared/AiVideoStudio.Shared.csproj", "src/AiVideoStudio.Shared/"]
+RUN dotnet restore "src/AiVideoStudio.Api/AiVideoStudio.Api.csproj"
+
+COPY . .
+RUN dotnet publish "src/AiVideoStudio.Api/AiVideoStudio.Api.csproj" \
+    --configuration "$BUILD_CONFIGURATION" \
+    --output /app/publish \
+    --no-restore \
+    /p:UseAppHost=false
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+
+CMD ["sh", "-c", "ASPNETCORE_URLS=http://0.0.0.0:${PORT:-80} exec dotnet AiVideoStudio.Api.dll"]
