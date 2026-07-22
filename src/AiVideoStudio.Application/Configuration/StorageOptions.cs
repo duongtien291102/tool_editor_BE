@@ -8,10 +8,10 @@ public class StorageOptions
     public const string SectionName = "Storage";
 
     [Required]
-    public string Provider { get; set; } = "Local";
+    public string Provider { get; set; } = string.Empty;
 
     [Required]
-    public string BasePath { get; set; } = "./uploads";
+    public string BasePath { get; set; } = string.Empty;
 
     public long MaxFileSizeBytes { get; set; } = 524288000; // 500 MB default
 

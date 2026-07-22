@@ -24,15 +24,7 @@ public class LocalStorageProvider : IStorageProvider
             throw new ArgumentNullException(nameof(data));
         }
 
-        var baseDir = string.IsNullOrWhiteSpace(_options.BasePath) ? "./uploads" : _options.BasePath;
-        var targetFolder = string.IsNullOrWhiteSpace(bucketName) ? baseDir : Path.Combine(baseDir, bucketName);
-
-        if (!Directory.Exists(targetFolder))
-        {
-            Directory.CreateDirectory(targetFolder);
-        }
-
-        var fullPath = Path.Combine(targetFolder, objectKey);
+        var fullPath = ResolvePath(bucketName, objectKey);
 
         var subDir = Path.GetDirectoryName(fullPath);
         if (!string.IsNullOrEmpty(subDir) && !Directory.Exists(subDir))
@@ -58,9 +50,7 @@ public class LocalStorageProvider : IStorageProvider
 
     public Task<Stream> DownloadAsync(string bucketName, string objectKey, CancellationToken cancellationToken = default)
     {
-        var baseDir = string.IsNullOrWhiteSpace(_options.BasePath) ? "./uploads" : _options.BasePath;
-        var targetFolder = string.IsNullOrWhiteSpace(bucketName) ? baseDir : Path.Combine(baseDir, bucketName);
-        var fullPath = Path.Combine(targetFolder, objectKey);
+        var fullPath = ResolvePath(bucketName, objectKey);
 
         if (!File.Exists(fullPath))
         {
@@ -73,9 +63,7 @@ public class LocalStorageProvider : IStorageProvider
 
     public Task DeleteAsync(string bucketName, string objectKey, CancellationToken cancellationToken = default)
     {
-        var baseDir = string.IsNullOrWhiteSpace(_options.BasePath) ? "./uploads" : _options.BasePath;
-        var targetFolder = string.IsNullOrWhiteSpace(bucketName) ? baseDir : Path.Combine(baseDir, bucketName);
-        var fullPath = Path.Combine(targetFolder, objectKey);
+        var fullPath = ResolvePath(bucketName, objectKey);
 
         if (File.Exists(fullPath))
         {
@@ -87,10 +75,49 @@ public class LocalStorageProvider : IStorageProvider
 
     public Task<bool> ExistsAsync(string bucketName, string objectKey, CancellationToken cancellationToken = default)
     {
-        var baseDir = string.IsNullOrWhiteSpace(_options.BasePath) ? "./uploads" : _options.BasePath;
-        var targetFolder = string.IsNullOrWhiteSpace(bucketName) ? baseDir : Path.Combine(baseDir, bucketName);
-        var fullPath = Path.Combine(targetFolder, objectKey);
+        var fullPath = ResolvePath(bucketName, objectKey);
 
         return Task.FromResult(File.Exists(fullPath));
+    }
+
+    public async Task MoveAsync(string sourceBucket, string sourceKey, string destinationBucket, string destinationKey, CancellationToken cancellationToken = default)
+    {
+        await CopyAsync(sourceBucket, sourceKey, destinationBucket, destinationKey, cancellationToken);
+        await DeleteAsync(sourceBucket, sourceKey, cancellationToken);
+    }
+
+    public async Task CopyAsync(string sourceBucket, string sourceKey, string destinationBucket, string destinationKey, CancellationToken cancellationToken = default)
+    {
+        await using var source = await OpenReadStreamAsync(sourceBucket, sourceKey, cancellationToken);
+        await UploadAsync(destinationBucket, destinationKey, source, "application/octet-stream", cancellationToken);
+    }
+
+    public Task<Stream> OpenReadStreamAsync(string bucketName, string objectKey, CancellationToken cancellationToken = default)
+        => DownloadAsync(bucketName, objectKey, cancellationToken);
+
+    public Task<Uri> GenerateTemporaryUrlAsync(string bucketName, string objectKey, TimeSpan lifetime, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        _ = ResolvePath(bucketName, objectKey);
+        var path = $"{bucketName}/{objectKey}".Trim('/').Replace('\\', '/');
+        return Task.FromResult(new Uri($"mock-storage://asset/{Uri.EscapeDataString(path)}?ttl={Math.Max(1, (int)lifetime.TotalSeconds)}"));
+    }
+
+    private string ResolvePath(string bucketName, string objectKey)
+    {
+        if (string.IsNullOrWhiteSpace(_options.BasePath))
+            throw new InvalidOperationException("Storage BasePath is not configured.");
+        if (string.IsNullOrWhiteSpace(objectKey))
+            throw new ArgumentException("Object key is required.", nameof(objectKey));
+
+        var root = Path.GetFullPath(_options.BasePath);
+        var combined = string.IsNullOrWhiteSpace(bucketName)
+            ? Path.Combine(root, objectKey)
+            : Path.Combine(root, bucketName, objectKey);
+        var resolved = Path.GetFullPath(combined);
+        var rootPrefix = root.EndsWith(Path.DirectorySeparatorChar) ? root : root + Path.DirectorySeparatorChar;
+        if (!resolved.StartsWith(rootPrefix, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Storage path escapes the configured root.");
+        return resolved;
     }
 }

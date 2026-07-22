@@ -106,7 +106,7 @@ builder.Services.AddCors(options =>
 
 // Dependency Injection
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 MongoConventionPackInitializer.Initialize();
 
@@ -125,6 +125,8 @@ app.UseSwaggerUI(c =>
 app.UseCors("DefaultCorsPolicy");
 
 app.UseAuthentication();
+app.UseMiddleware<ProductionSecurityMiddleware>();
+app.UseMiddleware<RequestMetricsMiddleware>();
 app.UseAuthorization();
 
 app.MapHealthChecks("/health");

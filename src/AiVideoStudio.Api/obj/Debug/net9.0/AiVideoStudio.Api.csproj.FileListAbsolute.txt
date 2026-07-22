@@ -88,3 +88,4 @@ E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net9.0\AiVideoStud
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net9.0\AiVideoStudio.Api.genruntimeconfig.cache
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net9.0\ref\AiVideoStudio.Api.dll
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\bin\Debug\net9.0\BCrypt-Net-Next.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net9.0\AiVideoStudio.Api.sourcelink.json

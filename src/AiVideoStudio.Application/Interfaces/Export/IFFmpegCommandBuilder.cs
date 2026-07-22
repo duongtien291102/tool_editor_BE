@@ -1,0 +1,9 @@
+using AiVideoStudio.Application.Features.Exports.Models;
+using AiVideoStudio.Domain.Entities;
+
+namespace AiVideoStudio.Application.Interfaces.Export;
+
+public interface IFFmpegCommandBuilder
+{
+    FFmpegCommandModel Build(RenderGraph graph, ExportJob job, string outputDirectory);
+}

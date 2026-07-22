@@ -1,55 +1,22 @@
-# Architecture Review — Timeline Module Quality Assurance
+# Architecture Review — Sprint 10 Operations Foundation
 
-## Executive Summary
+## Clean Architecture boundaries
 
-This architecture review evaluates the quality assurance implementation and test architecture for the **Timeline Module** of `AiVideoStudio.BE`. The test suite strictly validates Clean Architecture boundaries, Domain-Driven Design (DDD) invariants, optimistic concurrency control, track/clip overlap rules, and API contracts without modifying any production code.
+- Domain owns operational aggregates, enums, domain events, and persistence contracts.
+- Application owns CQRS contracts and handlers, Result errors, DTOs, mappings, validators, owner/admin decisions, and provider-neutral service abstractions.
+- Infrastructure owns Mongo repositories, dependency probes, metrics storage, operational dispatchers, signed URLs, rate limiting, maintenance execution, and worker lifecycle.
+- API owns HTTP contracts, Swagger descriptions, response mapping, and middleware composition.
 
----
+Dependencies point inward and production-provider details do not leak into the domain or application. Configuration is bound through typed Options; sensitive dynamic values are redacted at the application mapping boundary.
 
-## 1. Clean Architecture Boundaries & Verification
+## Operational reliability
 
-The testing architecture isolates concerns across project boundaries:
+Liveness avoids external calls, while readiness uses a bounded timeout and reports individual dependencies. Metrics are thread-safe, can be disabled, and cap dynamic series. Maintenance persists its lifecycle around retention work and records both cleanup throughput and failures. Correlation ID, request ID, trace ID, and audit metadata create a consistent diagnostic chain.
 
-```
-src/
- ├── AiVideoStudio.Domain           # Timeline Aggregate, Track & Clip Entities, TrackType Enum, Invariant Validation
- ├── AiVideoStudio.Application      # Commands, Queries, Timeline/Track/Clip Handlers, FluentValidation Validators
- ├── AiVideoStudio.Infrastructure   # Mongo TimelineRepository Implementation, Soft Delete & Concurrency Updates
- ├── AiVideoStudio.Api              # TimelinesController (v1), MediatR dispatching, HTTP Status mappings
- └── AiVideoStudio.Shared           # Timeline Errors, ApiContracts Requests/Responses, Result Pattern
-tests/
- ├── AiVideoStudio.UnitTests        # Domain, Handler, Query, and Validator Unit Tests
- └── AiVideoStudio.IntegrationTests # CustomWebApplicationFactory, Controllers Integration Tests
-```
+## Security and authorization
 
----
+Owner checks protect notification and usage operations. Admin checks protect audit, configuration, metrics, and maintenance. The API adds defensive response headers and a provider-neutral rate-limit hook. Signed URLs are HMAC-based, expiry-bound, and configured outside code.
 
-## 2. Domain Invariant Integrity
+## Compatibility
 
-1. **Timeline Aggregate Invariants**:
-   - **Version Tracking**: Version starts at `1` and increments on every structural modification (`AddTrack`, `RemoveTrack`, `ReorderTrack`, `AddClip`, `MoveClip`, `ResizeClip`, `DeleteClip`, `SoftDelete`, `AutoSave`).
-   - **Track Order Continuity**: Track orders remain continuous (`0..N-1`) after additions, deletions, or reordering.
-   - **Deletion Guard**: Tracks containing clips cannot be removed (`TrackContainsClips`).
-   - **Overlap Policies**: Video/Audio tracks prohibit overlapping clip frame ranges, whereas Overlay/Subtitle/Effect tracks allow overlaps.
-   - **Dynamic Duration**: Duration is dynamically calculated based on max clip end frames across all tracks.
-
-2. **Application Handler Invariants**:
-   - **Project Constraint**: A project is restricted to one timeline aggregate (`TimelineErrors.AlreadyExists`).
-   - **Optimistic Concurrency**: Database updates check expected version against current version, returning `TimelineErrors.VersionConflict` on mismatch.
-   - **AutoSave Idempotency**: If AutoSave payload has no changes compared to server state, database update and version increment are bypassed.
-
----
-
-## 3. Test Architecture & Security
-
-* **Mocking & Isolation**: Handlers are tested using NSubstitute for `ITimelineRepository`, `IProjectRepository`, `IMapper`, and `ICurrentUser`.
-* **Integration Testing**: `TimelinesControllerIntegrationTests` utilizes `CustomWebApplicationFactory` and ASP.NET Core `TestHost` to exercise HTTP pipelines, routing, authentication handler schemes, error responses (`ApiResponse<T>`), and status codes (`201 Created`, `200 OK`, `404 NotFound`, `409 Conflict`).
-* **Zero Production Code Alterations**: Production assemblies remain untouched, maintaining zero side-effects.
-
----
-
-## 4. Test Summary
-
-- **Total Unit Tests**: 153 PASS
-- **Total Integration Tests**: 34 PASS
-- **Overall System Result**: 187 PASS, 0 FAIL
+Sprint 10 extends dependency injection and the HTTP pipeline but does not change business logic in Auth, Project, Media, Script, Timeline, Render, AI Provider, Export, Storage, or Workflow. Existing regression tests remain part of the full solution run.

@@ -24,7 +24,8 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
             new Claim(ClaimTypes.NameIdentifier, "user_integration_123"),
             new Claim("userId", "user_integration_123"),
             new Claim(ClaimTypes.Name, "integration_user"),
-            new Claim(ClaimTypes.Role, "User")
+            new Claim(ClaimTypes.Role, "User"),
+            new Claim(ClaimTypes.Role, "Admin")
         };
 
         var identity = new ClaimsIdentity(claims, "Test");

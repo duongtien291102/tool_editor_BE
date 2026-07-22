@@ -15,3 +15,4 @@ E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiV
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\refint\AiVideoStudio.Application.dll
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.pdb
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\ref\AiVideoStudio.Application.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.sourcelink.json

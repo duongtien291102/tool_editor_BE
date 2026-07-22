@@ -481,3 +481,4 @@ E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.IntegrationTests\obj\Debug\net
 E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.IntegrationTests\obj\Debug\net9.0\AiVideoStudio.IntegrationTests.pdb
 E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.IntegrationTests\obj\Debug\net9.0\AiVideoStudio.IntegrationTests.genruntimeconfig.cache
 E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.IntegrationTests\obj\Debug\net9.0\ref\AiVideoStudio.IntegrationTests.dll
+E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.IntegrationTests\obj\Debug\net9.0\AiVideoStudio.IntegrationTests.sourcelink.json

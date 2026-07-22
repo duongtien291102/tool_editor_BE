@@ -72,7 +72,7 @@ public class TimelinesControllerIntegrationTests : IClassFixture<CustomWebApplic
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
         body.Should().NotBeNull();
         body!.Success.Should().BeFalse();
-        body.Message.Should().Be("Conflict");
+        body.Message.Should().Be("Conflict.");
     }
 
     [Fact]
@@ -108,7 +108,7 @@ public class TimelinesControllerIntegrationTests : IClassFixture<CustomWebApplic
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
         body.Should().NotBeNull();
         body!.Success.Should().BeFalse();
-        body.Message.Should().Be("Not found");
+        body.Message.Should().Be("Resource not found.");
     }
 
     [Fact]
@@ -127,7 +127,7 @@ public class TimelinesControllerIntegrationTests : IClassFixture<CustomWebApplic
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
         body.Should().NotBeNull();
-        body!.Message.Should().Be("Conflict");
+        body!.Message.Should().Be("Conflict.");
     }
 
     [Fact]
@@ -142,10 +142,7 @@ public class TimelinesControllerIntegrationTests : IClassFixture<CustomWebApplic
 
         var response = await _client.DeleteAsync($"/api/v1/timelines/{timeline.Id}");
 
-        response.StatusCode.Should().Be(HttpStatusCode.OK);
-        var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
-        body.Should().NotBeNull();
-        body!.Success.Should().BeTrue();
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
     [Fact]
@@ -185,7 +182,7 @@ public class TimelinesControllerIntegrationTests : IClassFixture<CustomWebApplic
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
         body.Should().NotBeNull();
-        body!.Message.Should().Be("Conflict");
+        body!.Message.Should().Be("Conflict.");
     }
 
     [Fact]
@@ -206,7 +203,7 @@ public class TimelinesControllerIntegrationTests : IClassFixture<CustomWebApplic
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
         body.Should().NotBeNull();
-        body!.Message.Should().Be("Conflict");
+        body!.Message.Should().Be("Conflict.");
     }
 
     [Fact]
@@ -227,7 +224,7 @@ public class TimelinesControllerIntegrationTests : IClassFixture<CustomWebApplic
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
         var body = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
         body.Should().NotBeNull();
-        body!.Message.Should().Be("Conflict");
+        body!.Message.Should().Be("Conflict.");
     }
 
     [Fact]

@@ -1,0 +1,6 @@
+2026-07-22 14:31:45.921 +07:00 [INF] RenderWorker is starting.
+2026-07-22 14:31:45.924 +07:00 [INF] ExportWorker started.
+2026-07-22 14:31:45.933 +07:00 [INF] Reject was not authenticated. Failure message: No test identity.
+2026-07-22 14:31:45.934 +07:00 [INF] AuthenticationScheme: Reject was challenged.
+2026-07-22 14:31:45.934 +07:00 [INF] HTTP Request Completed {"MachineName":"JAIKADUONG","Environment":"Production","ApplicationVersion":"15.0.0.0","TraceId":"7bfa7b48bcac2f46914a4bf406330bac","Payload":{"Method":"GET","Path":{"Value":"/api/v1/uploads/anything","HasValue":true,"$type":"PathString"},"StatusCode":401,"DurationMs":1,"CorrelationId":"8f32e2cc-a750-43c8-a89c-5881ea338a73","UserId":"Anonymous","IP":null,"UserAgent":""}}
+2026-07-22 14:31:45.936 +07:00 [INF] RenderWorker is stopping.

@@ -15,23 +15,27 @@ using Microsoft.Extensions.Logging;
 namespace AiVideoStudio.Infrastructure.Render;
 
 /// <summary>
-/// Background worker that dequeues RenderJobs and processes them via IRenderProvider.
+/// Background worker that dequeues RenderJobs and resolves implementations only through
+/// IRenderProviderFactory.
 /// Supports cancellation, progress updates, and exponential backoff retries.
 /// </summary>
 public class RenderWorker : BackgroundService, IRenderJobCanceller
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IRenderQueue _queue;
+    private readonly IRenderProviderFactory _providerFactory;
     private readonly ILogger<RenderWorker> _logger;
     private readonly ConcurrentDictionary<string, CancellationTokenSource> _activeJobs = new();
 
     public RenderWorker(
         IServiceProvider serviceProvider,
         IRenderQueue queue,
+        IRenderProviderFactory providerFactory,
         ILogger<RenderWorker> logger)
     {
         _serviceProvider = serviceProvider;
         _queue = queue;
+        _providerFactory = providerFactory;
         _logger = logger;
     }
 
@@ -82,7 +86,6 @@ public class RenderWorker : BackgroundService, IRenderJobCanceller
 
         using var scope = _serviceProvider.CreateScope();
         var repo = scope.ServiceProvider.GetRequiredService<IRenderJobRepository>();
-        var provider = scope.ServiceProvider.GetRequiredService<IRenderProvider>();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         var job = await repo.GetByIdAsync(jobId, hostCancellationToken);
@@ -121,24 +124,31 @@ public class RenderWorker : BackgroundService, IRenderJobCanceller
             job.Start();
             await repo.UpdateAsync(job, hostCancellationToken);
 
+            // Provider selection is isolated behind the factory. The worker has no
+            // dependency on concrete provider implementations or selection policy.
+            var provider = _providerFactory.GetProvider(job.Provider);
+
             // Periodically report progress via a background task (simulation)
+            using var progressCts = CancellationTokenSource.CreateLinkedTokenSource(jobCts.Token);
             var progressTask = Task.Run(async () =>
             {
                 for (int i = 10; i <= 90; i += 20)
                 {
-                    if (jobCts.Token.IsCancellationRequested) break;
-                    await Task.Delay(1000, jobCts.Token);
-                    if (jobCts.Token.IsCancellationRequested) break;
+                    if (progressCts.Token.IsCancellationRequested) break;
+                    await Task.Delay(1000, progressCts.Token);
+                    if (progressCts.Token.IsCancellationRequested) break;
                     
                     // Use mediator to update progress so it goes through handlers/events
                     await mediator.Send(new UpdateRenderProgressCommand(jobId, i), hostCancellationToken);
                 }
-            }, jobCts.Token);
+            }, progressCts.Token);
 
             // Execute the provider
             var result = await provider.RenderAsync(job, jobCts.Token);
 
-            // Wait for progress reporter to finish
+            // Stop the simulated reporter when the provider finishes. Without this,
+            // every completed provider call waits for the full reporter duration.
+            progressCts.Cancel();
             try { await progressTask; } catch (OperationCanceledException) { }
 
             // Re-fetch before final update to avoid version conflicts if it was updated externally

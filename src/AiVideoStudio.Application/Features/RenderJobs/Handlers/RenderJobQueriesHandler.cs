@@ -67,7 +67,7 @@ public class RenderJobQueriesHandler :
         var dtos = pagedJobs.Items.Select(j => _mapper.Map<RenderJobSummaryDto>(j)).ToList();
 
         return Result<PagedResult<RenderJobSummaryDto>>.Success(
-            new PagedResult<RenderJobSummaryDto>(dtos, pagedJobs.TotalCount, pagedJobs.CurrentPage, pagedJobs.PageSize));
+            new PagedResult<RenderJobSummaryDto>(dtos, pagedJobs.TotalCount, pagedJobs.Page, pagedJobs.PageSize));
     }
 
     public async Task<Result<PagedResult<RenderJobSummaryDto>>> Handle(GetProjectRenderJobsQuery request, CancellationToken cancellationToken)
@@ -91,7 +91,7 @@ public class RenderJobQueriesHandler :
         var dtos = pagedJobs.Items.Select(j => _mapper.Map<RenderJobSummaryDto>(j)).ToList();
 
         return Result<PagedResult<RenderJobSummaryDto>>.Success(
-            new PagedResult<RenderJobSummaryDto>(dtos, pagedJobs.TotalCount, pagedJobs.CurrentPage, pagedJobs.PageSize));
+            new PagedResult<RenderJobSummaryDto>(dtos, pagedJobs.TotalCount, pagedJobs.Page, pagedJobs.PageSize));
     }
 
     private bool IsOwnerOrAdmin(string ownerId)

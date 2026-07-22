@@ -13,3 +13,4 @@ E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Domain\obj\Debug\net9.0\AiVideoS
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Domain\obj\Debug\net9.0\refint\AiVideoStudio.Domain.dll
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Domain\obj\Debug\net9.0\AiVideoStudio.Domain.pdb
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Domain\obj\Debug\net9.0\ref\AiVideoStudio.Domain.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Domain\obj\Debug\net9.0\AiVideoStudio.Domain.sourcelink.json
