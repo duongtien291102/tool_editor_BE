@@ -1,0 +1,2 @@
+namespace AiVideoStudio.Shared.DomainErrors;
+public static class OperationsErrors{public static readonly Error NotFound=new("Operations.NotFound","Resource not found.");public static readonly Error Unauthorized=new("Operations.Unauthorized","Authentication required.");public static readonly Error Forbidden=new("Operations.Forbidden","Administrator access required.");public static readonly Error InvalidState=new("Operations.InvalidState","Invalid operations state.");public static readonly Error QuotaExceeded=new("Operations.QuotaExceeded","Quota exceeded.");}

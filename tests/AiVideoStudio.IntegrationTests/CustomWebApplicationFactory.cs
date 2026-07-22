@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Hosting;
+using AiVideoStudio.Infrastructure.Workflow;
+using AiVideoStudio.Application.Interfaces.Operations;
 using NSubstitute;
 
 namespace AiVideoStudio.IntegrationTests;
@@ -26,6 +29,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     public IRenderJobRepository RenderJobRepository { get; } = Substitute.For<IRenderJobRepository>();
     public IExportJobRepository ExportJobRepository { get; } = Substitute.For<IExportJobRepository>();
     public IUploadSessionRepository UploadSessionRepository { get; } = Substitute.For<IUploadSessionRepository>();
+    public IAIWorkflowRepository AIWorkflowRepository { get; } = Substitute.For<IAIWorkflowRepository>();
+    public IWorkflowExecutionRepository WorkflowExecutionRepository { get; } = Substitute.For<IWorkflowExecutionRepository>();
+    public INotificationRepository NotificationRepository { get; } = Substitute.For<INotificationRepository>();
+    public IQuotaRepository QuotaRepository { get; } = Substitute.For<IQuotaRepository>();
+    public ISystemConfigurationRepository SystemConfigurationRepository { get; } = Substitute.For<ISystemConfigurationRepository>();
+    public IMaintenanceRepository MaintenanceRepository { get; } = Substitute.For<IMaintenanceRepository>();
+    public IHealthCheckService HealthCheckService { get; } = Substitute.For<IHealthCheckService>();
+    public IMaintenanceRunner MaintenanceRunner { get; } = Substitute.For<IMaintenanceRunner>();
     public ITransactionManager TransactionManager { get; } = Substitute.For<ITransactionManager>();
     public ICurrentUser CurrentUser { get; } = Substitute.For<ICurrentUser>();
 
@@ -80,6 +91,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Scoped(_ => RenderJobRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => ExportJobRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => UploadSessionRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => AIWorkflowRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => WorkflowExecutionRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => NotificationRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => QuotaRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => SystemConfigurationRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => MaintenanceRepository));
+            services.Replace(ServiceDescriptor.Singleton(_ => HealthCheckService));
+            services.Replace(ServiceDescriptor.Scoped(_ => MaintenanceRunner));
             services.Replace(ServiceDescriptor.Scoped(_ => TransactionManager));
             services.Replace(ServiceDescriptor.Scoped(_ => CurrentUser));
 
@@ -89,6 +108,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Scoped(_ => AuthenticationService));
             services.Replace(ServiceDescriptor.Scoped(_ => PermissionResolver));
             services.Replace(ServiceDescriptor.Scoped(_ => EventBus));
+
+            var workflowIndexInitializer = services.FirstOrDefault(x =>
+                x.ServiceType == typeof(IHostedService) && x.ImplementationType == typeof(WorkflowIndexInitializer));
+            if (workflowIndexInitializer is not null) services.Remove(workflowIndexInitializer);
         });
     }
 }

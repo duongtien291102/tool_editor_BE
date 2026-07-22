@@ -1,0 +1,3 @@
+using AiVideoStudio.Application.Features.Operations.DTOs;using AiVideoStudio.Domain.Entities;using AutoMapper;
+namespace AiVideoStudio.Application.Features.Operations.Mappings;
+public sealed class OperationProfile:Profile{public OperationProfile(){CreateMap<AuditLog,AuditLogDto>();CreateMap<SystemNotification,NotificationDto>();CreateMap<UserQuota,QuotaDto>().ConstructUsing(x=>new(x.UserId,x.Type,x.Limit,x.Used,Math.Max(0,x.Limit-x.Used),x.Used>x.Limit));CreateMap<UsageRecord,UsageDto>();CreateMap<SystemConfiguration,ConfigurationDto>().ConstructUsing(x=>new(x.Key,x.IsSensitive?"***":x.Value,x.IsSensitive,x.UpdatedAt));CreateMap<MaintenanceTask,MaintenanceDto>();}}

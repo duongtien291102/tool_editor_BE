@@ -1,0 +1,6 @@
+using AiVideoStudio.Domain.Entities;using AiVideoStudio.Domain.Enums;using AiVideoStudio.Shared.Responses;
+namespace AiVideoStudio.Domain.Interfaces;
+public interface INotificationRepository{Task<SystemNotification?> GetAsync(string id,CancellationToken ct=default);Task AddAsync(SystemNotification item,CancellationToken ct=default);Task UpdateAsync(SystemNotification item,CancellationToken ct=default);Task<PagedResult<SystemNotification>> GetByUserAsync(string user,int page,int size,CancellationToken ct=default);}
+public interface IQuotaRepository{Task<UserQuota?> GetAsync(string user,QuotaType type,CancellationToken ct=default);Task UpsertAsync(UserQuota item,CancellationToken ct=default);Task AddUsageAsync(UsageRecord item,CancellationToken ct=default);}
+public interface ISystemConfigurationRepository{Task<IReadOnlyList<SystemConfiguration>> GetAllAsync(CancellationToken ct=default);Task<SystemConfiguration?> GetAsync(string key,CancellationToken ct=default);Task UpsertAsync(SystemConfiguration item,CancellationToken ct=default);}
+public interface IMaintenanceRepository{Task AddAsync(MaintenanceTask item,CancellationToken ct=default);Task UpdateAsync(MaintenanceTask item,CancellationToken ct=default);Task<MaintenanceTask?> GetAsync(string id,CancellationToken ct=default);}

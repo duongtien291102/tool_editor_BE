@@ -44,6 +44,7 @@
             Soft deletes a media asset by ID.
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:AiVideoStudio.Api.Controllers.v1.OperationsController.Failure(AiVideoStudio.Shared.Responses.Result)" -->
         <member name="M:AiVideoStudio.Api.Controllers.v1.ProjectsController.Create(AiVideoStudio.Shared.ApiContracts.V1.Projects.Requests.CreateProjectRequest,System.Threading.CancellationToken)">
             <summary>
             Creates a new project.
@@ -292,6 +293,39 @@
             All responses use ApiResponse&lt;T&gt; — no raw strings or untyped IActionResult.
             No exception swallowing here; only domain-level Result failures are handled.
             </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Create(AiVideoStudio.Api.Controllers.v1.CreateWorkflowRequest,System.Threading.CancellationToken)">
+            <summary>Create a validated DAG workflow for a project.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Get(System.String,System.Threading.CancellationToken)">
+            <summary>Get a workflow and all step states.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.List(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>List project workflows using stable pagination.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Run(System.String,System.Threading.CancellationToken)">
+            <summary>Queue a ready workflow for background execution.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Cancel(System.String,System.Threading.CancellationToken)">
+            <summary>Cancel queued or active execution.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Retry(System.String,System.Threading.CancellationToken)">
+            <summary>Reset and queue a failed workflow.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Pause(System.String,System.Threading.CancellationToken)">
+            <summary>Pause an active workflow at a step boundary.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Resume(System.String,System.Threading.CancellationToken)">
+            <summary>Resume a paused workflow.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Update(System.String,AiVideoStudio.Api.Controllers.v1.UpdateWorkflowRequest,System.Threading.CancellationToken)">
+            <summary>Replace workflow metadata and DAG while it is not running.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>Soft-delete a workflow that is not running.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Execution(System.String,System.Threading.CancellationToken)">
+            <summary>Get the most recent workflow execution.</summary>
         </member>
     </members>
 </doc>

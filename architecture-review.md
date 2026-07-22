@@ -1,20 +1,20 @@
-# Architecture Review — Sprint 8 Storage Engine
+# Architecture Review — Sprint 9 Workflow Engine
 
-## Boundaries
+## Clean Architecture boundaries
 
-Domain owns UploadSession invariants and events. Application owns CQRS, Result handling, validation, DTOs, mappings, and storage-processing contracts. Infrastructure owns local mock persistence, chunk streaming, derived artifacts, metadata, manifests, and Mongo. API only maps HTTP contracts to MediatR.
+- Domain owns `AIWorkflow`, steps, executions, variables, templates, triggers, state transitions, DAG invariants, and workflow domain events.
+- Application owns CQRS contracts/handlers, Result errors, DTOs, mappings, validators, authorization, and the step-dispatch abstraction.
+- Infrastructure owns DAG resolution, scheduling, execution, capability dispatch, worker lifecycle, Mongo repositories, and indexes.
+- API owns only HTTP request/response mapping and Swagger metadata.
 
-Existing Media handlers continue using the original `IStorageProvider` methods unchanged; the interface was extended backward-compatibly. Auth, Project, Script, Timeline, Render, AI Provider, and Export logic were not modified.
+## Execution and recovery
 
-## Production-readiness
+The scheduler deduplicates IDs and never blocks a request thread. The background worker starts execution tasks with cancellation support. Only nodes whose dependencies reached a successful terminal state are considered. Conditions can skip a node; outputs are namespaced by step ID and also exposed to following steps. Each attempt has its own timeout token. Failures retry up to `MaxRetries`, then fail both workflow and execution. Cancellation cascades to non-terminal steps. Pause is persisted and polled between execution boundaries; resume continues the same execution.
 
-- Per-chunk and complete-file SHA-256 validation.
-- Idempotent completed-chunk tracking for resume.
-- Disk-streaming merge instead of whole-file memory buffering.
-- Cancellation propagated through storage, hashing, copy, merge, and API operations.
-- Configured storage root with canonical traversal protection.
-- Provider-neutral move/copy/download/stream/delete/temporary URL operations.
-- Owner/admin authorization with Unauthorized and Forbidden separation.
-- Mongo repository and paginated project queries.
+## Provider boundary
 
-S3, Azure Blob, Cloudinary, and CDN delivery can be introduced behind `IStorageProvider` without changing upload/domain/business workflows.
+Workflow step type maps to a capability, not to a provider. Resolution filters `IRenderProviderRegistry` by capability and `IProviderHealthChecker`, then obtains the implementation from `IRenderProviderFactory`. Only existing mocks are registered. Render/export/custom orchestration remains behind a dispatcher result and does not alter prior queues or aggregates.
+
+## Persistence and compatibility
+
+Workflows and executions are separate Mongo collections. Workflow indexes cover `ProjectId`, `OwnerId`, `Status`, `CreatedAt`, and `UpdatedAt`; execution indexes cover workflow chronology and status. Sprint 9 is additive. Auth, Project, Media, Script, Timeline, Render, Provider, Export, and Storage business logic remains unchanged.

@@ -1,30 +1,26 @@
-# Verification Report — Sprint 8 Storage Engine
+# Verification Report — Sprint 9 Workflow Engine
 
-## Implementation Matrix
+## Test matrix
 
-| Area | Result |
-| :--- | :---: |
-| UploadSession state machine, version, events | PASS |
-| CQRS, Result, validators, AutoMapper | PASS |
-| Chunk validation, resume, merge, SHA-256 | PASS |
-| Upload/download/delete/move/copy/exists/stream/temp URL | PASS |
-| Image/video/audio derivatives | PASS |
-| Image/video/audio/subtitle metadata | PASS |
-| Asset manifest and completed MediaAsset | PASS |
-| Mongo repository and DI | PASS |
-| Seven authorized endpoints | PASS |
-
-## Test Matrix
-
-| Suite | Sprint 7 | Sprint 8 added | Final |
+| Suite | Sprint 8 baseline | Sprint 9 added | Final |
 | :--- | ---: | ---: | ---: |
-| Unit | 207 | 12 | 219 |
-| Integration | 51 | 8 | 59 |
-| Total | 258 | 20 | 278 |
+| Unit | 219 | 22 | 241 |
+| Integration | 59 | 10 | 69 |
+| Total | 278 | 32 | 310 |
 
-Integration verification includes Start, chunk upload, duplicate-chunk resume, ordered merge, complete checksum, asset completion, Cancel, Retry, Get, List, Unauthorized, Forbidden, and NotFound.
+| Coverage area | Result |
+| :--- | :---: |
+| Aggregate, DAG/cycle/unknown/duplicate validation | PASS |
+| State machine, retry, cancel, pause/resume, variables | PASS |
+| Dependency and condition resolution, skip semantics | PASS |
+| Scheduler deduplication and worker registration | PASS |
+| Executor completion, context propagation, timeout/failure | PASS |
+| CQRS validation, owner/admin authorization, Result mapping | PASS |
+| Controller create/get/list/run/cancel/retry/pause/resume/update/delete/execution | PASS |
+| Mongo repositories and index definitions | PASS |
+| Capability-based provider resolution through existing mocks | PASS |
 
-## Regression Matrix
+## Regression matrix
 
 | Module | Result |
 | :--- | :---: |
@@ -38,16 +34,16 @@ Integration verification includes Start, chunk upload, duplicate-chunk resume, o
 | Export Engine | PASS |
 | Storage Engine | PASS |
 
-## Build and Test
+## Build and test result
 
-`dotnet build`: 0 errors, 44 reported baseline warnings (including the repeated NU1903 restore/build advisory); no warning points to a Sprint 8 file.
+`dotnet build AiVideoStudio.slnx --no-restore`: 0 errors. Existing warnings include the pre-existing AutoMapper NU1903 advisory and older nullable warnings; no warning originates from a Sprint 9 source file.
 
 `dotnet test`:
 
 ```text
-Unit:        219 passed, 0 failed, 0 skipped
-Integration: 59 passed, 0 failed, 0 skipped
-Total:       278 passed, 0 failed, 0 skipped
+Unit:        241 passed, 0 failed, 0 skipped
+Integration: 69 passed, 0 failed, 0 skipped
+Total:       310 passed, 0 failed, 0 skipped
 ```
 
-No real cloud provider was integrated, no path is hardcoded in provider code, no incomplete abstraction was added, and no Git command was executed.
+No real AI API, cloud provider, hardcoded provider selection, hardcoded prompt, or Git command was used.

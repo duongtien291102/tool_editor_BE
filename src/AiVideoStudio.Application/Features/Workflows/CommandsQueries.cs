@@ -1,0 +1,6 @@
+using AiVideoStudio.Application.Features.Workflows.DTOs;using AiVideoStudio.Shared.Responses;using MediatR;
+namespace AiVideoStudio.Application.Features.Workflows;
+public record CreateWorkflowCommand(string ProjectId,string Name,string? Description,IReadOnlyList<WorkflowStepDefinition> Steps,IReadOnlyDictionary<string,string>? Variables):IRequest<Result<WorkflowDto>>;
+public record UpdateWorkflowCommand(string Id,string Name,string? Description,IReadOnlyList<WorkflowStepDefinition> Steps):IRequest<Result<WorkflowDto>>;
+public record DeleteWorkflowCommand(string Id):IRequest<Result>;public record RunWorkflowCommand(string Id):IRequest<Result<WorkflowDto>>;public record CancelWorkflowCommand(string Id):IRequest<Result>;public record RetryWorkflowCommand(string Id):IRequest<Result<WorkflowDto>>;public record PauseWorkflowCommand(string Id):IRequest<Result>;public record ResumeWorkflowCommand(string Id):IRequest<Result>;public record UpdateWorkflowVariablesCommand(string Id,IReadOnlyDictionary<string,string> Variables):IRequest<Result<WorkflowDto>>;
+public record GetWorkflowByIdQuery(string Id):IRequest<Result<WorkflowDto>>;public record GetProjectWorkflowsQuery(string ProjectId,int Page=1,int PageSize=20):IRequest<Result<PagedResult<WorkflowSummaryDto>>>;public record GetWorkflowExecutionQuery(string WorkflowId):IRequest<Result<WorkflowExecutionDto>>;

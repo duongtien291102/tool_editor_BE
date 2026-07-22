@@ -1,3 +1,0 @@
-2026-07-22 11:07:01.762 +07:00 [INF] RenderWorker is starting.
-2026-07-22 11:07:01.767 +07:00 [INF] ExportWorker started.
-2026-07-22 11:07:01.785 +07:00 [INF] RenderWorker is stopping.

@@ -1,0 +1,11 @@
+using AiVideoStudio.Domain.Enums;using AiVideoStudio.Shared.Responses;using MediatR;
+namespace AiVideoStudio.Application.Features.Operations;
+public record CreateNotificationCommand(string UserId,string Title,string Message,NotificationType Type):IRequest<Result<DTOs.NotificationDto>>;
+public record MarkNotificationReadCommand(string Id):IRequest<Result>;
+public record UpdateSystemConfigurationCommand(string Key,string Value,bool IsSensitive=false):IRequest<Result<DTOs.ConfigurationDto>>;
+public record RecordUsageCommand(QuotaType Type,long Amount,string ResourceId):IRequest<Result<DTOs.UsageDto>>;
+public record RunMaintenanceCommand(string Name):IRequest<Result<DTOs.MaintenanceDto>>;
+public record GetNotificationsQuery(int Page=1,int PageSize=20):IRequest<Result<PagedResult<DTOs.NotificationDto>>>;
+public record GetAuditLogsQuery(int Page=1,int PageSize=20):IRequest<Result<PagedResult<DTOs.AuditLogDto>>>;
+public record GetQuotaQuery(QuotaType Type):IRequest<Result<DTOs.QuotaDto>>;
+public record GetSystemConfigurationQuery:IRequest<Result<IReadOnlyList<DTOs.ConfigurationDto>>>;

@@ -6,6 +6,8 @@ using AiVideoStudio.Application.Storage;
 using AiVideoStudio.Application.Configuration;
 using AiVideoStudio.Application.Interfaces.Render;
 using AiVideoStudio.Application.Interfaces.Export;
+using AiVideoStudio.Application.Interfaces.Workflow;
+using AiVideoStudio.Application.Interfaces.Operations;
 using AiVideoStudio.Infrastructure.Auth;
 using AiVideoStudio.Infrastructure.Background;
 using AiVideoStudio.Infrastructure.Configuration;
@@ -113,6 +115,42 @@ public static class DependencyInjection
         services.AddSingleton<IExportJobCanceller>(provider =>
             provider.GetRequiredService<AiVideoStudio.Infrastructure.Export.ExportWorker>());
         services.AddHostedService(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Export.ExportWorker>());
+
+        // AI Workflow orchestration (capability-based; providers remain behind the existing factory)
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.IAIWorkflowRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.AIWorkflowRepository>();
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.IWorkflowExecutionRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.WorkflowExecutionRepository>();
+        services.AddSingleton<AiVideoStudio.Domain.Interfaces.IWorkflowResolver, AiVideoStudio.Infrastructure.Workflow.WorkflowResolver>();
+        services.AddSingleton<AiVideoStudio.Domain.Interfaces.IWorkflowScheduler, AiVideoStudio.Infrastructure.Workflow.InMemoryWorkflowScheduler>();
+        services.AddSingleton<IWorkflowStepDispatcher, AiVideoStudio.Infrastructure.Workflow.WorkflowStepDispatcher>();
+        services.AddSingleton<AiVideoStudio.Domain.Interfaces.IWorkflowExecutor, AiVideoStudio.Infrastructure.Workflow.WorkflowExecutor>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.Workflow.WorkflowWorker>();
+        services.AddHostedService(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Workflow.WorkflowWorker>());
+        services.AddHostedService<AiVideoStudio.Infrastructure.Workflow.WorkflowIndexInitializer>();
+
+        // Production operations foundation
+        services.AddOptions<SystemOptions>().Bind(configuration.GetSection(SystemOptions.SectionName)).ValidateDataAnnotations().ValidateOnStart();
+        services.AddOptions<WorkflowOptions>().Bind(configuration.GetSection(WorkflowOptions.SectionName));
+        services.AddOptions<RenderOptions>().Bind(configuration.GetSection(RenderOptions.SectionName));
+        services.AddOptions<NotificationOptions>().Bind(configuration.GetSection(NotificationOptions.SectionName));
+        services.AddOptions<MaintenanceOptions>().Bind(configuration.GetSection(MaintenanceOptions.SectionName));
+        services.AddOptions<HealthOptions>().Bind(configuration.GetSection(HealthOptions.SectionName));
+        services.AddOptions<MetricsOptions>().Bind(configuration.GetSection(MetricsOptions.SectionName));
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.INotificationRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.NotificationRepository>();
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.IQuotaRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.QuotaRepository>();
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.ISystemConfigurationRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.SystemConfigurationRepository>();
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.IMaintenanceRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.MaintenanceRepository>();
+        services.AddSingleton<IMetricsCollector, AiVideoStudio.Infrastructure.Operations.MetricsCollector>();
+        services.AddScoped<IAuditWriter, AiVideoStudio.Infrastructure.Operations.AuditWriter>();
+        services.AddScoped<IUsageTracker, AiVideoStudio.Infrastructure.Operations.UsageTracker>();
+        services.AddScoped<INotificationDispatcher, AiVideoStudio.Infrastructure.Operations.NotificationDispatcher>();
+        services.AddScoped<IMaintenanceRunner, AiVideoStudio.Infrastructure.Operations.MaintenanceRunner>();
+        services.AddSingleton<IHealthCheckService, AiVideoStudio.Infrastructure.Operations.ProductionHealthCheckService>();
+        services.AddSingleton<IRateLimiter, AiVideoStudio.Infrastructure.Operations.FixedWindowRateLimiter>();
+        services.AddSingleton<ISignedUrlService, AiVideoStudio.Infrastructure.Operations.SignedUrlService>();
+        services.AddScoped<AiVideoStudio.Infrastructure.Operations.RequestContext>();
+        services.AddScoped<IRequestContext>(p => p.GetRequiredService<AiVideoStudio.Infrastructure.Operations.RequestContext>());
+        services.AddScoped<ICorrelationIdProvider>(p => p.GetRequiredService<AiVideoStudio.Infrastructure.Operations.RequestContext>());
+        services.AddHostedService<AiVideoStudio.Infrastructure.Operations.MaintenanceWorker>();
 
         services.AddTransient<ISeeder, UserSeeder>();
         services.AddTransient<ISeeder, RoleSeeder>();

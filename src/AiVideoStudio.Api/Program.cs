@@ -113,6 +113,8 @@ MongoConventionPackInitializer.Initialize();
 var app = builder.Build();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseMiddleware<ProductionSecurityMiddleware>();
+app.UseMiddleware<RequestMetricsMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
