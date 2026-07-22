@@ -57,8 +57,13 @@ public static class DependencyInjection
         services.AddScoped<AiVideoStudio.Domain.Interfaces.IAuditLogRepository, AiVideoStudio.Infrastructure.Persistence.Repositories.AuditLogRepository>();
         services.AddScoped<AiVideoStudio.Domain.Interfaces.IRenderJobRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.RenderJobRepository>();
         services.AddScoped<AiVideoStudio.Domain.Interfaces.IExportJobRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.ExportJobRepository>();
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.IUploadSessionRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.UploadSessionRepository>();
         services.AddScoped<AiVideoStudio.Application.Interfaces.ITransactionManager, AiVideoStudio.Infrastructure.Mongo.MongoTransactionManager>();
-        services.AddTransient<IStorageProvider, LocalStorageProvider>();
+        services.AddSingleton<IStorageProvider, MockStorageProvider>();
+        services.AddScoped<IChunkUploadEngine, ChunkUploadEngine>();
+        services.AddScoped<IThumbnailGenerator, MockThumbnailGenerator>();
+        services.AddScoped<IMetadataExtractor, MockMetadataExtractor>();
+        services.AddScoped<IAssetManifestBuilder, AssetManifestBuilder>();
         services.AddSingleton<IEventBus, InMemoryEventBus>();
         services.AddSingleton<IBackgroundJobService, BackgroundJobService>();
 

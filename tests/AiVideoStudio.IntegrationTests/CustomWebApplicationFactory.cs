@@ -25,6 +25,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     public IRefreshTokenRepository RefreshTokenRepository { get; } = Substitute.For<IRefreshTokenRepository>();
     public IRenderJobRepository RenderJobRepository { get; } = Substitute.For<IRenderJobRepository>();
     public IExportJobRepository ExportJobRepository { get; } = Substitute.For<IExportJobRepository>();
+    public IUploadSessionRepository UploadSessionRepository { get; } = Substitute.For<IUploadSessionRepository>();
     public ITransactionManager TransactionManager { get; } = Substitute.For<ITransactionManager>();
     public ICurrentUser CurrentUser { get; } = Substitute.For<ICurrentUser>();
 
@@ -78,6 +79,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Scoped(_ => RefreshTokenRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => RenderJobRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => ExportJobRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => UploadSessionRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => TransactionManager));
             services.Replace(ServiceDescriptor.Scoped(_ => CurrentUser));
 
