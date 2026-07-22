@@ -1,6 +1,7 @@
 using AiVideoStudio.Application.Features.Media.Commands;
 using AiVideoStudio.Application.Features.Media.DTOs;
 using AiVideoStudio.Application.Features.Media.Queries;
+using AiVideoStudio.Application.Storage;
 using AiVideoStudio.Domain.Enums;
 using AiVideoStudio.Shared.ApiContracts.V1.Media.Requests;
 using AiVideoStudio.Shared.Responses;
@@ -13,6 +14,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace AiVideoStudio.Api.Controllers.v1;
 
@@ -23,10 +25,13 @@ namespace AiVideoStudio.Api.Controllers.v1;
 public class MediaController : ControllerBase
 {
     private readonly ISender _mediator;
+    private readonly IStorageProvider _storageProvider;
+    private readonly FileExtensionContentTypeProvider _contentTypes = new();
 
-    public MediaController(ISender mediator)
+    public MediaController(ISender mediator, IStorageProvider storageProvider)
     {
         _mediator = mediator;
+        _storageProvider = storageProvider;
     }
 
     /// <summary>
@@ -39,21 +44,22 @@ public class MediaController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<MediaDto>), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ApiResponse<MediaDto>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<MediaDto>), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ApiResponse<MediaDto>>> Upload([FromForm] IFormFile file, [FromForm] string projectId, CancellationToken cancellationToken)
+    public async Task<ActionResult<ApiResponse<MediaDto>>> Upload([FromForm] MediaUploadForm request, CancellationToken cancellationToken)
     {
+        var file = request.File;
         if (file == null || file.Length <= 0)
         {
             return BadRequest(ApiResponse<MediaDto>.FailureResponse("File is required and cannot be empty.", new[] { "File is required and cannot be empty." }, "INVALID_FILE"));
         }
 
-        if (string.IsNullOrWhiteSpace(projectId))
+        if (string.IsNullOrWhiteSpace(request.ProjectId))
         {
             return BadRequest(ApiResponse<MediaDto>.FailureResponse("ProjectId is required.", new[] { "ProjectId is required." }, "INVALID_PROJECT_ID"));
         }
 
         using var stream = file.OpenReadStream();
         var command = new UploadMediaCommand(
-            projectId,
+            request.ProjectId,
             file.FileName,
             file.ContentType,
             file.Length,
@@ -89,6 +95,71 @@ public class MediaController : ControllerBase
         }
 
         return HandleFailure<MediaDto>(result);
+    }
+
+    /// <summary>
+    /// Streams an original media asset or its derived thumbnail through the configured storage provider.
+    /// </summary>
+    [HttpGet("media/{id}/content")]
+    [ProducesResponseType(typeof(FileStreamResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Content(
+        [FromRoute] string id,
+        [FromQuery] string variant = "original",
+        CancellationToken cancellationToken = default)
+    {
+        var normalizedVariant = variant.Trim().ToLowerInvariant();
+        if (normalizedVariant is not ("original" or "thumbnail"))
+        {
+            return BadRequest(ApiResponse<object>.FailureResponse(
+                "Variant must be either 'original' or 'thumbnail'.",
+                new[] { "Variant must be either 'original' or 'thumbnail'." },
+                "MEDIA.INVALID_VARIANT"));
+        }
+
+        var result = await _mediator.Send(new GetMediaByIdQuery(id), cancellationToken);
+        if (!result.IsSuccess || result.Value == null)
+        {
+            return HandleFailure<object>(result).Result!;
+        }
+
+        var media = result.Value;
+        var path = normalizedVariant == "thumbnail" ? media.ThumbnailPath : media.StoragePath;
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return NotFound(ApiResponse<object>.FailureResponse(
+                "The requested media content is not available.",
+                new[] { "The requested media content is not available." },
+                "MEDIA.CONTENT_NOT_FOUND"));
+        }
+
+        try
+        {
+            var stream = await _storageProvider.OpenReadStreamAsync(string.Empty, path, cancellationToken);
+            var contentType = normalizedVariant == "original"
+                ? media.MimeType
+                : _contentTypes.TryGetContentType(path, out var detected) ? detected : "application/octet-stream";
+
+            Response.Headers.CacheControl = "private, max-age=300";
+            return File(stream, contentType, enableRangeProcessing: true);
+        }
+        catch (FileNotFoundException)
+        {
+            return NotFound(ApiResponse<object>.FailureResponse(
+                "The requested media content was not found in storage.",
+                new[] { "The requested media content was not found in storage." },
+                "MEDIA.CONTENT_NOT_FOUND"));
+        }
+        catch (DirectoryNotFoundException)
+        {
+            return NotFound(ApiResponse<object>.FailureResponse(
+                "The requested media content was not found in storage.",
+                new[] { "The requested media content was not found in storage." },
+                "MEDIA.CONTENT_NOT_FOUND"));
+        }
     }
 
     /// <summary>
@@ -209,4 +280,10 @@ public class MediaController : ControllerBase
 
         return BadRequest(ApiResponse<T>.FailureResponse(message, errors, code));
     }
+}
+
+public sealed class MediaUploadForm
+{
+    public IFormFile? File { get; set; }
+    public string ProjectId { get; set; } = string.Empty;
 }

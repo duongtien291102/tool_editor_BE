@@ -3,6 +3,7 @@ using AiVideoStudio.Domain.Entities;
 using AiVideoStudio.Domain.Enums;
 using AiVideoStudio.Shared.ApiContracts.V1.Media.Requests;
 using AiVideoStudio.Shared.Responses;
+using AiVideoStudio.Application.Storage;
 using FluentAssertions;
 using NSubstitute;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AiVideoStudio.IntegrationTests.Controllers;
 
@@ -87,6 +89,52 @@ public class MediaControllerIntegrationTests : IClassFixture<CustomWebApplicatio
         body.Should().NotBeNull();
         body!.Success.Should().BeTrue();
         body.Data!.Id.Should().Be(mediaAsset.Id);
+    }
+
+    [Fact]
+    public async Task GetMediaContent_WhenOwner_StreamsFromConfiguredStorage()
+    {
+        var userId = "media_content_owner";
+        var project = Project.Create("Delivery Project", userId);
+        var storage = _factory.Services.GetRequiredService<IStorageProvider>();
+        var bytes = Encoding.UTF8.GetBytes("browser-delivery");
+        var path = $"delivery/{System.Guid.NewGuid():N}.txt";
+        await using (var source = new MemoryStream(bytes))
+        {
+            await storage.UploadAsync(string.Empty, path, source, "text/plain");
+        }
+
+        var media = MediaAsset.Create(project.Id, userId, "asset.txt", "asset.txt", ".txt", "text/plain", bytes.Length, path, AssetType.Other);
+        _factory.CurrentUser.IsAuthenticated.Returns(true);
+        _factory.CurrentUser.UserId.Returns(userId);
+        _factory.CurrentUser.Roles.Returns(new List<string> { "User" });
+        _factory.MediaAssetRepository.GetByIdAsync(media.Id, Arg.Any<CancellationToken>()).Returns(media);
+        _factory.ProjectRepository.GetByIdAsync(project.Id, Arg.Any<CancellationToken>()).Returns(project);
+
+        var response = await _client.GetAsync($"/api/v1/media/{media.Id}/content?variant=original");
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        response.Content.Headers.ContentType!.MediaType.Should().Be("text/plain");
+        (await response.Content.ReadAsStringAsync()).Should().Be("browser-delivery");
+        response.Headers.CacheControl!.Private.Should().BeTrue();
+        await storage.DeleteAsync(string.Empty, path);
+    }
+
+    [Fact]
+    public async Task GetMediaThumbnail_WhenMetadataIsMissing_ReturnsNotFound()
+    {
+        var userId = "media_thumbnail_owner";
+        var project = Project.Create("Delivery Project", userId);
+        var media = MediaAsset.Create(project.Id, userId, "asset.jpg", "asset.jpg", ".jpg", "image/jpeg", 10, "asset.jpg", AssetType.Image);
+        _factory.CurrentUser.IsAuthenticated.Returns(true);
+        _factory.CurrentUser.UserId.Returns(userId);
+        _factory.CurrentUser.Roles.Returns(new List<string> { "User" });
+        _factory.MediaAssetRepository.GetByIdAsync(media.Id, Arg.Any<CancellationToken>()).Returns(media);
+        _factory.ProjectRepository.GetByIdAsync(project.Id, Arg.Any<CancellationToken>()).Returns(project);
+
+        var response = await _client.GetAsync($"/api/v1/media/{media.Id}/content?variant=thumbnail");
+
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]

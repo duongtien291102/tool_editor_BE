@@ -31,7 +31,8 @@ public class UsersController : ControllerBase
             _currentUser.Username ?? string.Empty,
             string.Empty, // Email not in token, could fetch from DB if needed
             "Active",
-            _currentUser.Roles
+            _currentUser.Roles,
+            _currentUser.Permissions
         );
 
         return Ok(ApiResponse<UserResponse>.SuccessResponse(response));

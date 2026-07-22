@@ -41,7 +41,10 @@ public class MongoTransactionManager : ITransactionManager, IDisposable
     {
         if (_session == null) return;
 
-        await _session.AbortTransactionAsync(cancellationToken);
+        if (_session.IsInTransaction)
+        {
+            await _session.AbortTransactionAsync(cancellationToken);
+        }
         
         MongoTransactionContext.CurrentSession = null;
         _session.Dispose();

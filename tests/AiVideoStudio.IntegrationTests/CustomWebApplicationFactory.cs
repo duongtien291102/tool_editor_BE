@@ -20,6 +20,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     public IMediaAssetRepository MediaAssetRepository { get; } = Substitute.For<IMediaAssetRepository>();
     public IProjectRepository ProjectRepository { get; } = Substitute.For<IProjectRepository>();
     public ITimelineRepository TimelineRepository { get; } = Substitute.For<ITimelineRepository>();
+    public IScriptRepository ScriptRepository { get; } = Substitute.For<IScriptRepository>();
     public IUserRepository UserRepository { get; } = Substitute.For<IUserRepository>();
     public IUserTokenRepository UserTokenRepository { get; } = Substitute.For<IUserTokenRepository>();
     public IPasswordHistoryRepository PasswordHistoryRepository { get; } = Substitute.For<IPasswordHistoryRepository>();
@@ -76,12 +77,18 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         builder.ConfigureTestServices(services =>
         {
-            services.AddAuthentication("Test")
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = "Test";
+                    options.DefaultAuthenticateScheme = "Test";
+                    options.DefaultChallengeScheme = "Test";
+                })
                 .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
 
             services.Replace(ServiceDescriptor.Scoped(_ => MediaAssetRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => ProjectRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => TimelineRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => ScriptRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => UserRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => UserTokenRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => PasswordHistoryRepository));

@@ -7,18 +7,27 @@ services:
       - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__MongoDb=mongodb://mongodb:27017
-      - ConnectionStrings__Redis=redis:6379
+      - MongoDb__ConnectionString=mongodb://mongodb:27017/?replicaSet=rs0
+      - MongoDb__DatabaseName=AiVideoStudioDb
+      - Redis__ConnectionString=redis:6379
     depends_on:
-      - mongodb
-      - redis
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   mongodb:
     image: mongo:latest
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"try { rs.status().ok } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongodb:27017'}]}).ok }\" | grep 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   redis:
     image: redis:alpine
@@ -26,6 +35,11 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 volumes:
   mongodb_data:

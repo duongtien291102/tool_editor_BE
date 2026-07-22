@@ -7,5 +7,6 @@ public record UserResponse(
     string Username,
     string Email,
     string Status,
-    IEnumerable<string> Roles
+    IEnumerable<string> Roles,
+    IEnumerable<string> Permissions
 );

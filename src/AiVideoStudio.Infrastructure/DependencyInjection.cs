@@ -42,6 +42,11 @@ public static class DependencyInjection
         services.AddSingleton<IAppTimeProvider, SystemTimeProvider>();
         services.AddSingleton<IIdGenerator, GuidIdGenerator>();
         services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+        services.AddScoped<IPermissionResolver, PermissionResolver>();
+        services.AddScoped<IAuthorizationService, AuthorizationService>();
 
         services.AddSingleton<MongoDbContext>();
         services.AddSingleton<ICacheService, RedisCacheService>();

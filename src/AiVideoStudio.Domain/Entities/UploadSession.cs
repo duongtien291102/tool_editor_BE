@@ -6,7 +6,7 @@ namespace AiVideoStudio.Domain.Entities;
 
 public sealed class UploadSession : BaseEntity
 {
-    private readonly List<int> _completedChunks = new();
+    private List<int> _completedChunks = new();
     public string AssetId { get; private set; } = string.Empty;
     public string ProjectId { get; private set; } = string.Empty;
     public string OwnerId { get; private set; } = string.Empty;

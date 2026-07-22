@@ -14,7 +14,7 @@ public class Scene
     public TimeSpan Duration { get; private set; }
     public string? Notes { get; private set; }
     
-    private readonly List<SceneElement> _elements = new();
+    private List<SceneElement> _elements = new();
     public IReadOnlyCollection<SceneElement> Elements => _elements.AsReadOnly();
 
     protected Scene() 

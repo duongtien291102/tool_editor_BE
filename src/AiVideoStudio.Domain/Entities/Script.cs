@@ -17,7 +17,7 @@ public class Script : BaseEntity
     
     public bool IsDeleted => DeletedAt.HasValue;
 
-    private readonly List<Scene> _scenes = new();
+    private List<Scene> _scenes = new();
     public IReadOnlyCollection<Scene> Scenes => _scenes.AsReadOnly();
 
     protected Script() 

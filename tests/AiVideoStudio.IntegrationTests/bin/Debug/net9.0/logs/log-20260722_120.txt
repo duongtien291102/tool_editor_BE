@@ -1,0 +1,15 @@
+2026-07-22 16:24:06.420 +07:00 [INF] RenderWorker is starting.
+2026-07-22 16:24:06.423 +07:00 [INF] ExportWorker started.
+2026-07-22 16:24:06.432 +07:00 [INF] RenderWorker dequeued job b5576c0b-f3d1-47ac-8204-8b48fd8060bb
+2026-07-22 16:24:06.450 +07:00 [INF] Provider OpenAI started render job b5576c0b-f3d1-47ac-8204-8b48fd8060bb.
+2026-07-22 16:24:06.492 +07:00 [INF] Provider OpenAI completed render job b5576c0b-f3d1-47ac-8204-8b48fd8060bb in 57ms.
+2026-07-22 16:24:06.493 +07:00 [INF] Job b5576c0b-f3d1-47ac-8204-8b48fd8060bb completed successfully.
+2026-07-22 16:24:06.493 +07:00 [INF] RenderWorker dequeued job fbf77465-02da-4708-b8ef-132ad5a8c553
+2026-07-22 16:24:06.493 +07:00 [WRN] [Security Audit] Login Failed for username: wronguser {"MachineName":"JAIKADUONG","Environment":"Production","ApplicationVersion":"15.0.0.0","TraceId":"88c718c40beb15c08c64916c3ded1d97","Payload":null}
+2026-07-22 16:24:06.493 +07:00 [INF] Provider Runway started render job fbf77465-02da-4708-b8ef-132ad5a8c553.
+2026-07-22 16:24:06.498 +07:00 [INF] [Security Audit] Login Success for user: 847bb0a4-4f5c-4ca3-8724-d2cabb9f46cd {"MachineName":"JAIKADUONG","Environment":"Production","ApplicationVersion":"15.0.0.0","TraceId":"ede44c8fb8f7f8b310300484fcdd48cf","Payload":null}
+2026-07-22 16:24:06.505 +07:00 [INF] [Security Audit] Token Refreshed for user: 5b2feaee-89fc-42df-9520-9ffeaa5830af {"MachineName":"JAIKADUONG","Environment":"Production","ApplicationVersion":"15.0.0.0","TraceId":"9fdca30dec3479419c544a53de518c16","Payload":null}
+2026-07-22 16:24:06.541 +07:00 [INF] Provider Runway completed render job fbf77465-02da-4708-b8ef-132ad5a8c553 in 47ms.
+2026-07-22 16:24:06.541 +07:00 [INF] Job fbf77465-02da-4708-b8ef-132ad5a8c553 completed successfully.
+2026-07-22 16:24:06.580 +07:00 [INF] RenderWorker is stopping.
+2026-07-22 16:24:06.733 +07:00 [INF] AuthenticationScheme: Test was forbidden.

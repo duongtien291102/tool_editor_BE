@@ -19,7 +19,7 @@
         <member name="M:AiVideoStudio.Api.Controllers.v1.ExportController.Retry(System.String,System.Threading.CancellationToken)">
             <summary>Retry a failed export.</summary>
         </member>
-        <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.String,System.Threading.CancellationToken)">
+        <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.Upload(AiVideoStudio.Api.Controllers.v1.MediaUploadForm,System.Threading.CancellationToken)">
             <summary>
             Uploads a media asset for a project using multipart/form-data.
             </summary>
@@ -27,6 +27,11 @@
         <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.GetById(System.String,System.Threading.CancellationToken)">
             <summary>
             Gets a media asset by ID.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.Content(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Streams an original media asset or its derived thumbnail through the configured storage provider.
             </summary>
         </member>
         <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.GetProjectMedia(System.String,AiVideoStudio.Shared.ApiContracts.V1.Media.Requests.GetProjectMediaQueryRequest,System.Threading.CancellationToken)">
