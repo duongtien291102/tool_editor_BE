@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AiVideoStudio.Application.Features.RenderJobs.DTOs;
 using AiVideoStudio.Domain.Entities;
+using AiVideoStudio.Domain.Enums;
 
 namespace AiVideoStudio.Application.Interfaces.Render;
 
@@ -11,6 +12,10 @@ namespace AiVideoStudio.Application.Interfaces.Render;
 /// </summary>
 public interface IRenderProvider
 {
+    RenderProvider Provider { get; }
+
+    IReadOnlySet<ProviderCapability> Capabilities { get; }
+
     /// <summary>
     /// Execute the rendering for the given job.
     /// Returns a strongly-typed RenderResult (never string, object, or dynamic).

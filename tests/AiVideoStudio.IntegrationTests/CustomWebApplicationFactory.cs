@@ -23,6 +23,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     public IEmailOutboxRepository EmailOutboxRepository { get; } = Substitute.For<IEmailOutboxRepository>();
     public IAuditLogRepository AuditLogRepository { get; } = Substitute.For<IAuditLogRepository>();
     public IRefreshTokenRepository RefreshTokenRepository { get; } = Substitute.For<IRefreshTokenRepository>();
+    public IRenderJobRepository RenderJobRepository { get; } = Substitute.For<IRenderJobRepository>();
     public ITransactionManager TransactionManager { get; } = Substitute.For<ITransactionManager>();
     public ICurrentUser CurrentUser { get; } = Substitute.For<ICurrentUser>();
 
@@ -70,6 +71,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Scoped(_ => EmailOutboxRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => AuditLogRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => RefreshTokenRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => RenderJobRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => TransactionManager));
             services.Replace(ServiceDescriptor.Scoped(_ => CurrentUser));
 

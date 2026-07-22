@@ -54,5 +54,229 @@
             Soft-deletes a project by its unique identifier. Only Owner or Admin can delete.
             </summary>
         </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.RenderJobsController.CreateJob(AiVideoStudio.Api.Controllers.v1.CreateRenderJobRequest)">
+            <summary>
+            Queue a new render job.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.RenderJobsController.GetJobById(System.String)">
+            <summary>
+            Get a render job by ID.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.RenderJobsController.GetRenderJobs(System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            Get list of render jobs (globally, filtered).
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.RenderJobsController.GetProjectRenderJobs(System.String,System.String,System.String,System.Boolean,System.Int32,System.Int32)">
+            <summary>
+            Get list of render jobs for a specific project.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.RenderJobsController.CancelJob(System.String)">
+            <summary>
+            Cancel a render job.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.RenderJobsController.RetryJob(System.String)">
+            <summary>
+            Retry a failed render job.
+            </summary>
+        </member>
+        <member name="T:AiVideoStudio.Api.Controllers.v1.TimelinesController">
+            <summary>
+            Timeline management endpoints — create, query, mutate and autosave timelines.
+            Authorization: Owner of the project or an Admin role.
+            GET endpoints are also protected — the handler verifies ownership before returning data.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.CreateTimeline(AiVideoStudio.Api.Contracts.V1.Timelines.Requests.CreateTimelineRequest,System.Threading.CancellationToken)">
+             <summary>Create a new Timeline for a project.</summary>
+             <remarks>
+             Each project can have at most ONE active timeline.
+             If a timeline already exists for the given project a **409 Conflict** is returned.
+            
+             Example request body:
+             ```json
+             {
+               "projectId": "proj-abc123",
+               "name": "Main Cut",
+               "frameRate": 30.0,
+               "resolutionWidth": 1920,
+               "resolutionHeight": 1080
+             }
+             ```
+             </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.GetTimelineById(System.String,System.Threading.CancellationToken)">
+            <summary>Get a Timeline by its unique ID.</summary>
+            <remarks>
+            Authorization is enforced: only the project owner or an Admin can retrieve this timeline.
+            Soft-deleted timelines are excluded automatically at the repository level.
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.GetTimelineByProject(System.String,System.Threading.CancellationToken)">
+             <summary>Get the Timeline associated with a project.</summary>
+             <remarks>
+             Authorization is enforced for GET: only the project owner or an Admin can read this.
+            
+             Example: `GET /api/v1/projects/proj-abc123/timeline`
+             </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.UpdateTimeline(System.String,AiVideoStudio.Api.Contracts.V1.Timelines.Requests.UpdateTimelineRequest,System.Threading.CancellationToken)">
+            <summary>Update the name and/or settings of a Timeline.</summary>
+            <remarks>
+            Example request body:
+            ```json
+            {
+              "name": "Director's Cut",
+              "frameRate": 24.0,
+              "resolutionWidth": 3840,
+              "resolutionHeight": 2160
+            }
+            ```
+            Returns **409 Conflict** if a concurrent modification was detected (OCC).
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.DeleteTimeline(System.String,System.Threading.CancellationToken)">
+            <summary>Soft-delete a Timeline.</summary>
+            <remarks>
+            The timeline is not physically removed; its `deletedAt` field is set instead.
+            Returns **204 No Content** on success (REST convention for destructive operations).
+            Returns **409 Conflict** on OCC version mismatch.
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.AddTrack(System.String,AiVideoStudio.Api.Contracts.V1.Timelines.Requests.AddTrackRequest,System.Threading.CancellationToken)">
+            <summary>Add a new Track to a Timeline.</summary>
+            <remarks>
+            Example request body:
+            ```json
+            {
+              "name": "Video Track 1",
+              "trackType": 0
+            }
+            ```
+            `trackType`: 0 = Video, 1 = Audio, 2 = Subtitle (enum values from `TrackType`).
+            Returns **409 Conflict** on OCC version mismatch.
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.DeleteTrack(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Remove a Track from a Timeline.</summary>
+            <remarks>
+            A track must be empty (no clips) before it can be deleted.
+            Returns **409 Conflict** if the track still contains clips or on OCC mismatch.
+            Returns **204 No Content** on success.
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.ReorderTrack(System.String,AiVideoStudio.Api.Contracts.V1.Timelines.Requests.ReorderTrackRequest,System.String,System.Threading.CancellationToken)">
+            <summary>Reorder a Track within a Timeline.</summary>
+            <remarks>
+            Example request body:
+            ```json
+            {
+              "newOrder": 2
+            }
+            ```
+            Pass `trackId` as a query parameter: `PUT /api/v1/timelines/{id}/tracks/reorder?trackId=track-xyz`.
+            Returns **409 Conflict** on OCC version mismatch.
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.AddClip(System.String,AiVideoStudio.Api.Contracts.V1.Timelines.Requests.AddClipRequest,System.Threading.CancellationToken)">
+            <summary>Add a new Clip to a Track inside a Timeline.</summary>
+            <remarks>
+            Example request body:
+            ```json
+            {
+              "trackId": "track-xyz",
+              "assetId": "asset-abc",
+              "startFrame": "00:00:00",
+              "endFrame": "00:00:05",
+              "name": "Opening scene",
+              "scriptSceneId": null,
+              "metadata": null
+            }
+            ```
+            Returns **409 Conflict** if the clip overlaps another clip on the same track (for exclusive track types) or OCC mismatch.
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.UpdateClip(System.String,System.String,AiVideoStudio.Api.Contracts.V1.Timelines.Requests.UpdateClipRequest,System.Threading.CancellationToken)">
+            <summary>Update properties of an existing Clip (name, layer, speed, trim, volume, metadata).</summary>
+            <remarks>
+            Example request body:
+            ```json
+            {
+              "name": "Updated Clip Name",
+              "layer": 0,
+              "speed": 1.0,
+              "trimStart": "00:00:00",
+              "trimEnd": "00:00:00",
+              "volume": 1.0,
+              "metadata": null
+            }
+            ```
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.MoveClip(System.String,System.String,AiVideoStudio.Api.Contracts.V1.Timelines.Requests.MoveClipRequest,System.Threading.CancellationToken)">
+            <summary>Move a Clip to a different Track and/or position.</summary>
+            <remarks>
+            Example request body:
+            ```json
+            {
+              "newTrackId": "track-new",
+              "newStartFrame": "00:00:10",
+              "newEndFrame": "00:00:15"
+            }
+            ```
+            Returns **409 Conflict** if the target track already has a clip in the specified range (for exclusive track types).
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.ResizeClip(System.String,System.String,AiVideoStudio.Api.Contracts.V1.Timelines.Requests.ResizeClipRequest,System.Threading.CancellationToken)">
+            <summary>Resize (change start/end frame) of a Clip in place.</summary>
+            <remarks>
+            Example request body:
+            ```json
+            {
+              "newStartFrame": "00:00:02",
+              "newEndFrame": "00:00:08"
+            }
+            ```
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.DeleteClip(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Delete a Clip from a Timeline.</summary>
+            <remarks>
+            Returns **204 No Content** on success.
+            </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.AutoSaveTimeline(System.String,AiVideoStudio.Api.Contracts.V1.Timelines.Requests.AutoSaveTimelineRequest,System.Threading.CancellationToken)">
+             <summary>Auto-save the full state of a Timeline (idempotent).</summary>
+             <remarks>
+             This endpoint is **idempotent**: if the submitted `data` is identical to the persisted state,
+             the version is NOT incremented and NO write is performed.
+            
+             The handler compares the full serialised DTO before deciding to persist.
+            
+             Example request body:
+             ```json
+             {
+               "data": {
+                 "id": "timeline-001",
+                 "version": 5,
+                 "name": "Main Cut",
+                 "tracks": []
+               }
+             }
+             ```
+             Returns **409 Conflict** if the client's `version` does not match the server version (OCC).
+             </remarks>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.TimelinesController.CreateErrorResponse(AiVideoStudio.Shared.DomainErrors.Error)">
+            <summary>
+            Maps domain errors to proper HTTP status codes.
+            All responses use ApiResponse&lt;T&gt; — no raw strings or untyped IActionResult.
+            No exception swallowing here; only domain-level Result failures are handled.
+            </summary>
+        </member>
     </members>
 </doc>

@@ -1,86 +1,46 @@
-using System;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using AiVideoStudio.Application.Features.RenderJobs.DTOs;
+using AiVideoStudio.Application.Configuration;
 using AiVideoStudio.Application.Interfaces.Render;
 using AiVideoStudio.Domain.Entities;
 using AiVideoStudio.Domain.Enums;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace AiVideoStudio.Infrastructure.Render;
 
-/// <summary>
-/// A mock provider that simulates rendering by delaying execution.
-/// Real implementation would call OpenAI, Runway, etc. APIs.
-/// </summary>
-public class MockRenderProvider : IRenderProvider
+public sealed class MockRenderProvider : AbstractRenderProvider
 {
-    private readonly ILogger<MockRenderProvider> _logger;
-    private readonly TimeSpan _simulatedDuration = TimeSpan.FromSeconds(5); // Simulated render time
+    private static readonly IReadOnlySet<ProviderCapability> SupportedCapabilities =
+        new HashSet<ProviderCapability>(Enum.GetValues<ProviderCapability>());
 
-    public string ProviderName => "MockProvider";
+    public MockRenderProvider(
+        ILogger<MockRenderProvider> logger,
+        IOptionsMonitor<ProviderOptions> options,
+        IApiKeyProvider apiKeyProvider)
+        : base(logger, options, apiKeyProvider) { }
 
-    public MockRenderProvider(ILogger<MockRenderProvider> logger)
+    public override RenderProvider Provider => RenderProvider.Internal;
+    public override IReadOnlySet<ProviderCapability> Capabilities => SupportedCapabilities;
+
+    protected override Task<string?> RenderInternalAsync(RenderJob job, CancellationToken cancellationToken) =>
+        MockRenderSimulation.RenderAsync(Provider, job, cancellationToken);
+}
+
+internal static class MockRenderSimulation
+{
+    public static async Task<string?> RenderAsync(
+        RenderProvider provider,
+        RenderJob job,
+        CancellationToken cancellationToken)
     {
-        _logger = logger;
-    }
-
-    public async Task<RenderResult> RenderAsync(RenderJob job, CancellationToken cancellationToken = default)
-    {
-        _logger.LogInformation("MockRenderProvider starting job {JobId} (Type: {Type})", job.Id, job.JobType);
-
-        var startTime = DateTimeOffset.UtcNow;
-
-        try
+        await Task.Delay(TimeSpan.FromMilliseconds(25), cancellationToken);
+        return JsonSerializer.Serialize(new
         {
-            // Simulate work divided into 10 steps (for progress updates if we wanted to push from provider)
-            int steps = 10;
-            int stepDelayMs = (int)(_simulatedDuration.TotalMilliseconds / steps);
-
-            for (int i = 0; i < steps; i++)
-            {
-                // Break out early if cancelled
-                cancellationToken.ThrowIfCancellationRequested();
-                
-                await Task.Delay(stepDelayMs, cancellationToken);
-            }
-
-            var duration = DateTimeOffset.UtcNow - startTime;
-
-            // Simulate successful output payload
-            var outputObj = new
-            {
-                jobId = job.Id,
-                status = "Success",
-                mockData = "This is a simulated render result.",
-                generatedAt = DateTimeOffset.UtcNow
-            };
-            var jsonString = JsonSerializer.Serialize(outputObj);
-
-            _logger.LogInformation("MockRenderProvider completed job {JobId}", job.Id);
-
-            return RenderResult.Succeeded(jsonString, duration);
-        }
-        catch (OperationCanceledException)
-        {
-            _logger.LogWarning("MockRenderProvider rendering cancelled for job {JobId}", job.Id);
-            var duration = DateTimeOffset.UtcNow - startTime;
-            return RenderResult.Failed("CANCELLED", "Render was cancelled by the user or system.", duration);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "MockRenderProvider encountered an error on job {JobId}", job.Id);
-            var duration = DateTimeOffset.UtcNow - startTime;
-            return RenderResult.Failed("SYSTEM_ERROR", ex.Message, duration);
-        }
-    }
-
-    public Task CancelAsync(string jobId, CancellationToken cancellationToken = default)
-    {
-        // For the mock provider, cancellation is handled purely via CancellationToken passed to RenderAsync.
-        // A real provider might call an external API (e.g., POST /v1/jobs/{id}/cancel).
-        _logger.LogInformation("MockRenderProvider received cancel signal for job {JobId}", jobId);
-        return Task.CompletedTask;
+            jobId = job.Id,
+            provider = provider.ToString(),
+            status = "Success",
+            mockData = "Simulated render result.",
+            generatedAt = DateTimeOffset.UtcNow
+        });
     }
 }

@@ -156,3 +156,4 @@ E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.UnitTests\bin\Debug\net9.0\run
 E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.UnitTests\bin\Debug\net9.0\runtimes\win\native\mongocrypt.dll
 E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.UnitTests\bin\Debug\net9.0\AiVideoStudio.Infrastructure.dll
 E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.UnitTests\bin\Debug\net9.0\AiVideoStudio.Infrastructure.pdb
+E:\Tool_editor\tool_editor_BE\tests\AiVideoStudio.UnitTests\obj\Debug\net9.0\AiVideoStudio.UnitTests.sourcelink.json

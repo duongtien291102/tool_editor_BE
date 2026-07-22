@@ -1,67 +1,38 @@
-# Sprint 4 — Timeline Module Quality Assurance Walkthrough
+# Sprint 6 — AI Provider Framework Walkthrough
 
-## Overview
+## Outcome
 
-Sprint 4 delivers a comprehensive, production-grade test suite for the **Timeline Module** in **AiVideoStudio.BE**, following Clean Architecture and DDD principles. Without altering any production code or business logic, the complete suite of Unit Tests and Integration Tests was implemented and validated. All unit tests and integration tests pass with 100% success rate and zero regressions across existing modules (Auth, Project, Media, Script, and Timeline).
+Sprint 6 adds a vendor-neutral AI provider framework on top of the existing render abstraction. RenderWorker now resolves providers exclusively through `IRenderProviderFactory`; it has no knowledge of concrete AI vendors.
 
----
+## Delivered Components
 
-## 1. Test Suite Implementation
+- Application contracts: factory, registry, selector, health checker, API-key provider, capabilities, and provider options.
+- Shared provider lifecycle: `AbstractRenderProvider` implements logging, timing, cancellation, timeout, retry, capability validation, and exception mapping.
+- Provider discovery: `RenderProviderRegistry` is populated through `IEnumerable<IRenderProvider>` from DI and rejects duplicate routes.
+- Provider selection: `FirstAvailableProviderSelector` honors enabled state and health, preferring the requested route and falling back to the first available provider.
+- Secret boundary: `MemoryApiKeyProvider` implements `IApiKeyProvider`; no key is hardcoded and providers never access configuration directly.
+- Mock implementations: Internal, OpenAI, Runway, Kling, Veo, ElevenLabs, and Stable Video. No external AI endpoint is called.
+- Capability declarations for image, video, voice, subtitle, upscale, inpainting, outpainting, and image editing.
 
-### 1. Domain Aggregate Tests (`TimelineTests.cs`)
-- **Initialization**: Verified `CreateTimeline_ShouldInitializeVersionToOne` and `CreateTimeline_ShouldHaveNoTracks`.
-- **Version Tracking**: Verified automatic version incrementing for `AddTrack`, `RemoveTrack`, `ReorderTrack`, `AddClip`, `MoveClip`, `ResizeClip`, `DeleteClip`, `SoftDelete`, and `AutoSave`.
-- **Track Operations & Order Invariants**: Tested contiguous track reordering (`0..N-1`), continuous order normalization, and prevention of deleting tracks containing clips (`TrackContainsClips`).
-- **Overlap Rules**: Verified strict overlap rejection on `Video` and `Audio` tracks, while allowing overlaps on `Overlay`, `Subtitle`, and `Effect` tracks.
-- **Duration Calculation**: Verified dynamic duration computation based on clip frame ranges, and duration reduction when clips are removed.
-- **Boundary & Validation Invariants**: Verified rejection of negative start frames and end frames less than or equal to start frames.
+## RenderWorker Integration
 
-### 2. Command & Query Handler Tests (`TimelineCommandsHandlerTests.cs`)
-- **Success & Business Rules**: Verified single timeline per project (`TimelineErrors.AlreadyExists`), handle success cases for Timeline, Track, and Clip commands.
-- **Version Conflict**: Verified optimistic concurrency checks returning `TimelineErrors.VersionConflict` when database update version checks fail.
-- **AutoSave Logic**: Verified `AutoSave_WithNoChanges_ShouldNotIncrementVersion` and `AutoSave_WithChanges_ShouldIncrementVersion`.
-- **Authorization & Scoping**: Verified `AuthErrors.Unauthorized` when a non-owner/non-admin user attempts modifications or queries.
-- **Entity Lookup**: Verified `TimelineErrors.NotFound` for missing timelines, tracks, or clips.
+The worker receives `IRenderProviderFactory` by constructor injection and calls `GetProvider(job.Provider)`. Queue behavior, job state transitions, persistence, cancellation, and output mapping remain unchanged.
 
-### 3. Validator Tests (`TimelineCommandValidatorsTests.cs`)
-- **100% Rule Coverage**: Verified all validator classes in `Validators.cs`:
-  - `CreateTimelineCommandValidator`
-  - `UpdateTimelineCommandValidator`
-  - `DeleteTimelineCommandValidator`
-  - `AutoSaveTimelineCommandValidator`
-  - `AddTrackCommandValidator`
-  - `RemoveTrackCommandValidator`
-  - `ReorderTrackCommandValidator`
-  - `UpdateTrackCommandValidator`
-  - `AddClipCommandValidator`
-  - `UpdateClipCommandValidator`
-  - `MoveClipCommandValidator`
-  - `ResizeClipCommandValidator`
-  - `DeleteClipCommandValidator`
-  - `GetTimelineByProjectQueryValidator`
-  - `GetTimelineQueryValidator`
-- **Boundary & Null Checks**: Verified valid inputs, boundary values, empty strings, null values, negative durations, and max string lengths (200 chars).
+During integration testing, a synchronization defect was confirmed: the worker waited for the complete five-second simulated progress loop after a provider had already returned. A linked progress token now stops the reporter immediately on provider completion. This is the only behavioral correction in the render pipeline.
 
-### 4. Integration Tests (`TimelinesControllerIntegrationTests.cs`)
-- **API Endpoints Tested**: `POST /api/v1/timelines`, `GET /api/v1/projects/{projectId}/timeline`, `GET /api/v1/timelines/{id}`, `PUT /api/v1/timelines/{id}`, `DELETE /api/v1/timelines/{id}`, `POST /api/v1/timelines/{id}/autosave`, `POST /api/v1/timelines/{id}/tracks`, `DELETE /api/v1/timelines/{id}/tracks/{trackId}`, `POST /api/v1/timelines/{id}/clips`, etc.
-- **Contract & Status Verification**: Checked proper HTTP Status Codes (`201 Created`, `200 OK`, `404 NotFound`, `409 Conflict`, `400 BadRequest`) and `ApiResponse<T>` contract payloads.
+## Verification
 
----
+`ProviderFrameworkTests` contains 13 new unit tests for the factory, registry, selector, health checker, abstract base, mock providers, and API-key provider.
 
-## 2. Test Execution Results
+`ProviderFrameworkIntegrationTests` contains 3 new integration tests for DI/provider resolution, unhealthy-provider fallback, and RenderWorker processing with OpenAI and Runway jobs.
 
-### `dotnet build` Result
+Final result:
+
 ```text
-Build succeeded.
-    2 Warning(s) (existing AutoMapper package vulnerability warning)
-    0 Error(s)
-Time Elapsed: 00:00:05.77
+Build succeeded: 0 errors, 2 reported instances of the existing NU1903 warning.
+Unit tests:       185 passed, 0 failed.
+Integration:      43 passed, 0 failed.
+Total:            228 passed, 0 failed.
 ```
 
-### `dotnet test` Result
-```text
-Passed!  - Failed: 0, Passed: 153, Skipped: 0, Total: 153, Duration: 173 ms - AiVideoStudio.UnitTests.dll (net9.0)
-Passed!  - Failed: 0, Passed:  34, Skipped: 0, Total:  34, Duration: 733 ms - AiVideoStudio.IntegrationTests.dll (net9.0)
-
-Total Test Suite: 187 PASSED, 0 FAILED.
-```
+Auth, Project, Media, Script, Timeline, and Render regression suites all pass. No Git command was used.

@@ -106,7 +106,7 @@ builder.Services.AddCors(options =>
 
 // Dependency Injection
 builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
 
 MongoConventionPackInitializer.Initialize();
 

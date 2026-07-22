@@ -1,55 +1,47 @@
-# Architecture Review — Timeline Module Quality Assurance
+# Architecture Review — Sprint 6 AI Provider Framework
 
 ## Executive Summary
 
-This architecture review evaluates the quality assurance implementation and test architecture for the **Timeline Module** of `AiVideoStudio.BE`. The test suite strictly validates Clean Architecture boundaries, Domain-Driven Design (DDD) invariants, optimistic concurrency control, track/clip overlap rules, and API contracts without modifying any production code.
+The provider framework satisfies dependency inversion: policy contracts live in Application, provider mechanics live in Infrastructure, and RenderWorker depends on a factory contract rather than vendor implementations. The design supports additional providers through DI registration without a factory switch-case or render-pipeline rewrite.
 
----
+## Boundary Review
 
-## 1. Clean Architecture Boundaries & Verification
+| Layer | Responsibility | Sprint 6 additions |
+| :--- | :--- | :--- |
+| Domain | Render provider identity and render job state | No behavioral change |
+| Application | Vendor-neutral contracts and configuration model | Factory, registry, selector, health, API keys, capability enum, options |
+| Infrastructure | Policy implementations and mock adapters | Base provider, registry, selector, health mock, key store, seven mock routes |
+| API | Composition root and configuration binding | Named provider options and DI activation |
 
-The testing architecture isolates concerns across project boundaries:
+No Auth, Project, Media, Script, or Timeline production file was changed.
 
-```
-src/
- ├── AiVideoStudio.Domain           # Timeline Aggregate, Track & Clip Entities, TrackType Enum, Invariant Validation
- ├── AiVideoStudio.Application      # Commands, Queries, Timeline/Track/Clip Handlers, FluentValidation Validators
- ├── AiVideoStudio.Infrastructure   # Mongo TimelineRepository Implementation, Soft Delete & Concurrency Updates
- ├── AiVideoStudio.Api              # TimelinesController (v1), MediatR dispatching, HTTP Status mappings
- └── AiVideoStudio.Shared           # Timeline Errors, ApiContracts Requests/Responses, Result Pattern
-tests/
- ├── AiVideoStudio.UnitTests        # Domain, Handler, Query, and Validator Unit Tests
- └── AiVideoStudio.IntegrationTests # CustomWebApplicationFactory, Controllers Integration Tests
-```
+## Dependency and Extensibility Review
 
----
+- RenderWorker's only provider-selection dependency is `IRenderProviderFactory`.
+- The factory delegates selection and contains no vendor-specific logic.
+- The registry discovers `IEnumerable<IRenderProvider>` from DI.
+- Concrete providers override `RenderInternalAsync`; lifecycle behavior cannot drift between vendors.
+- `IProviderSelector` permits a future round-robin, weighted, cost-aware, or capability-aware policy without worker changes.
+- `IProviderHealthChecker` permits a future active/cached health service without provider changes.
+- `IApiKeyProvider` permits vault integrations without exposing configuration to provider implementations.
 
-## 2. Domain Invariant Integrity
+## Resilience Review
 
-1. **Timeline Aggregate Invariants**:
-   - **Version Tracking**: Version starts at `1` and increments on every structural modification (`AddTrack`, `RemoveTrack`, `ReorderTrack`, `AddClip`, `MoveClip`, `ResizeClip`, `DeleteClip`, `SoftDelete`, `AutoSave`).
-   - **Track Order Continuity**: Track orders remain continuous (`0..N-1`) after additions, deletions, or reordering.
-   - **Deletion Guard**: Tracks containing clips cannot be removed (`TrackContainsClips`).
-   - **Overlap Policies**: Video/Audio tracks prohibit overlapping clip frame ranges, whereas Overlay/Subtitle/Effect tracks allow overlaps.
-   - **Dynamic Duration**: Duration is dynamically calculated based on max clip end frames across all tracks.
+`AbstractRenderProvider` applies bounded timeout and retry options, caller cancellation, exponential retry delay, duration measurement, structured logs, and deterministic exception-to-error mapping. Disabled or capability-incompatible providers return explicit failure codes.
 
-2. **Application Handler Invariants**:
-   - **Project Constraint**: A project is restricted to one timeline aggregate (`TimelineErrors.AlreadyExists`).
-   - **Optimistic Concurrency**: Database updates check expected version against current version, returning `TimelineErrors.VersionConflict` on mismatch.
-   - **AutoSave Idempotency**: If AutoSave payload has no changes compared to server state, database update and version increment are bypassed.
+`FirstAvailableProviderSelector` skips disabled and unhealthy providers. It throws a typed `ProviderUnavailableException` only when no usable registration exists.
 
----
+## Security Review
 
-## 3. Test Architecture & Security
+- No API key is embedded in source or checked-in configuration.
+- Providers do not depend on `IConfiguration`.
+- API keys are accessed only through `IApiKeyProvider`.
+- `MemoryApiKeyProvider` is an intentional development implementation; production may replace it with a vault adapter at DI composition.
 
-* **Mocking & Isolation**: Handlers are tested using NSubstitute for `ITimelineRepository`, `IProjectRepository`, `IMapper`, and `ICurrentUser`.
-* **Integration Testing**: `TimelinesControllerIntegrationTests` utilizes `CustomWebApplicationFactory` and ASP.NET Core `TestHost` to exercise HTTP pipelines, routing, authentication handler schemes, error responses (`ApiResponse<T>`), and status codes (`201 Created`, `200 OK`, `404 NotFound`, `409 Conflict`).
-* **Zero Production Code Alterations**: Production assemblies remain untouched, maintaining zero side-effects.
+## Render Pipeline Review
 
----
+The existing queue, repository, MediatR progress update, aggregate transitions, result parsing, retry-count backoff, and cancellation surface are retained. The provider resolution line is replaced by factory resolution. A confirmed progress-task wait defect was corrected with a linked cancellation token; integration coverage prevents recurrence.
 
-## 4. Test Summary
+## Production Readiness Assessment
 
-- **Total Unit Tests**: 153 PASS
-- **Total Integration Tests**: 34 PASS
-- **Overall System Result**: 187 PASS, 0 FAIL
+The framework is production-ready as an extensibility foundation: contracts are stable, provider lifecycle concerns are centralized, configuration is validated, secrets are abstracted, health fallback is implemented, mock adapters are deterministic, and the entire regression suite passes. Real vendor clients remain intentionally out of scope.

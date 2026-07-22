@@ -3,6 +3,8 @@ using AiVideoStudio.Application.Background;
 using AiVideoStudio.Application.Events;
 using AiVideoStudio.Application.Interfaces.Auth;
 using AiVideoStudio.Application.Storage;
+using AiVideoStudio.Application.Configuration;
+using AiVideoStudio.Application.Interfaces.Render;
 using AiVideoStudio.Infrastructure.Auth;
 using AiVideoStudio.Infrastructure.Background;
 using AiVideoStudio.Infrastructure.Configuration;
@@ -19,13 +21,16 @@ using AiVideoStudio.Shared.Configuration;
 using AiVideoStudio.Shared.Interfaces;
 using AiVideoStudio.Shared.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace AiVideoStudio.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructureServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddSingleton<IAppConfiguration, AppConfiguration>();
         services.AddSingleton(typeof(IAppLogger<>), typeof(SerilogLogger<>));
@@ -55,11 +60,32 @@ public static class DependencyInjection
         services.AddSingleton<IEventBus, InMemoryEventBus>();
         services.AddSingleton<IBackgroundJobService, BackgroundJobService>();
 
-        // Render Pipeline
-        services.AddSingleton<AiVideoStudio.Application.Interfaces.Render.IRenderQueue, AiVideoStudio.Infrastructure.Render.InMemoryRenderQueue>();
-        services.AddTransient<AiVideoStudio.Application.Interfaces.Render.IRenderProvider, AiVideoStudio.Infrastructure.Render.MockRenderProvider>();
+        // Render Pipeline and extensible provider framework
+        services.AddSingleton<IRenderQueue, AiVideoStudio.Infrastructure.Render.InMemoryRenderQueue>();
+
+        foreach (var provider in Enum.GetValues<AiVideoStudio.Domain.Enums.RenderProvider>())
+        {
+            services.AddOptions<ProviderOptions>(provider.ToString())
+                .Bind(configuration.GetSection($"{ProviderOptions.SectionName}:{provider}"))
+                .ValidateDataAnnotations();
+        }
+
+        services.AddSingleton<IApiKeyProvider, AiVideoStudio.Infrastructure.Render.MemoryApiKeyProvider>();
+        services.AddSingleton<IRenderProvider, AiVideoStudio.Infrastructure.Render.MockRenderProvider>();
+        services.AddSingleton<IRenderProvider, AiVideoStudio.Infrastructure.Render.MockOpenAIProvider>();
+        services.AddSingleton<IRenderProvider, AiVideoStudio.Infrastructure.Render.MockRunwayProvider>();
+        services.AddSingleton<IRenderProvider, AiVideoStudio.Infrastructure.Render.MockKlingProvider>();
+        services.AddSingleton<IRenderProvider, AiVideoStudio.Infrastructure.Render.MockVeoProvider>();
+        services.AddSingleton<IRenderProvider, AiVideoStudio.Infrastructure.Render.MockElevenLabsProvider>();
+        services.AddSingleton<IRenderProvider, AiVideoStudio.Infrastructure.Render.MockStableVideoProvider>();
+        services.AddSingleton<IRenderProviderRegistry, AiVideoStudio.Infrastructure.Render.RenderProviderRegistry>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.Render.MockProviderHealthChecker>();
+        services.AddSingleton<IProviderHealthChecker>(provider =>
+            provider.GetRequiredService<AiVideoStudio.Infrastructure.Render.MockProviderHealthChecker>());
+        services.AddSingleton<IProviderSelector, AiVideoStudio.Infrastructure.Render.FirstAvailableProviderSelector>();
+        services.AddSingleton<IRenderProviderFactory, AiVideoStudio.Infrastructure.Render.RenderProviderFactory>();
         services.AddSingleton<AiVideoStudio.Infrastructure.Render.RenderWorker>();
-        services.AddSingleton<AiVideoStudio.Application.Interfaces.Render.IRenderJobCanceller>(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Render.RenderWorker>());
+        services.AddSingleton<IRenderJobCanceller>(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Render.RenderWorker>());
         services.AddHostedService(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Render.RenderWorker>());
 
         services.AddTransient<ISeeder, UserSeeder>();

@@ -17,3 +17,4 @@ E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Infrastructure\obj\Debug\net9.0\
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Infrastructure\obj\Debug\net9.0\refint\AiVideoStudio.Infrastructure.dll
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Infrastructure\obj\Debug\net9.0\AiVideoStudio.Infrastructure.pdb
 E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Infrastructure\obj\Debug\net9.0\ref\AiVideoStudio.Infrastructure.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Infrastructure\obj\Debug\net9.0\AiVideoStudio.Infrastructure.sourcelink.json
