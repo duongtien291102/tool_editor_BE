@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AiVideoStudio.Api/AiVideoStudio.Api.csproj" />
+    <Project Path="src/AiVideoStudio.Application/AiVideoStudio.Application.csproj" />
+    <Project Path="src/AiVideoStudio.Domain/AiVideoStudio.Domain.csproj" />
+    <Project Path="src/AiVideoStudio.Infrastructure/AiVideoStudio.Infrastructure.csproj" />
+    <Project Path="src/AiVideoStudio.Shared/AiVideoStudio.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AiVideoStudio.IntegrationTests/AiVideoStudio.IntegrationTests.csproj" />
+    <Project Path="tests/AiVideoStudio.UnitTests/AiVideoStudio.UnitTests.csproj" />
+  </Folder>
+</Solution>

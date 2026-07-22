@@ -1,0 +1,7 @@
+{
+  "AiVideoStudio.Api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Api",
+  "AiVideoStudio.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application",
+  "AiVideoStudio.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain",
+  "AiVideoStudio.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure",
+  "AiVideoStudio.Shared, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared"
+}

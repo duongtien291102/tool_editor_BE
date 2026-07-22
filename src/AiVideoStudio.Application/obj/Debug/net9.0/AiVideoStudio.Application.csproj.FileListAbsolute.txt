@@ -1,0 +1,17 @@
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\bin\Debug\net9.0\AiVideoStudio.Application.deps.json
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\bin\Debug\net9.0\AiVideoStudio.Application.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\bin\Debug\net9.0\AiVideoStudio.Application.pdb
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\bin\Debug\net9.0\AiVideoStudio.Domain.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\bin\Debug\net9.0\AiVideoStudio.Shared.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\bin\Debug\net9.0\AiVideoStudio.Domain.pdb
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\bin\Debug\net9.0\AiVideoStudio.Shared.pdb
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.csproj.AssemblyReference.cache
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.GeneratedMSBuildEditorConfig.editorconfig
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.AssemblyInfoInputs.cache
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.AssemblyInfo.cs
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.csproj.CoreCompileInputs.cache
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoS.27A23E69.Up2Date
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\refint\AiVideoStudio.Application.dll
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\AiVideoStudio.Application.pdb
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\obj\Debug\net9.0\ref\AiVideoStudio.Application.dll

@@ -1,0 +1,8 @@
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net10.0\AiVideoStudio.Api.csproj.AssemblyReference.cache
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net10.0\rpswa.dswa.cache.json
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net10.0\AiVideoStudio.Api.GeneratedMSBuildEditorConfig.editorconfig
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net10.0\AiVideoStudio.Api.AssemblyInfoInputs.cache
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net10.0\AiVideoStudio.Api.AssemblyInfo.cs
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net10.0\AiVideoStudio.Api.csproj.CoreCompileInputs.cache
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net10.0\AiVideoStudio.Api.MvcApplicationPartsAssemblyInfo.cs
+E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\obj\Debug\net10.0\AiVideoStudio.Api.MvcApplicationPartsAssemblyInfo.cache

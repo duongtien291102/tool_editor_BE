@@ -1,0 +1,84 @@
+using AiVideoStudio.Application.Events;
+using AiVideoStudio.Application.Interfaces;
+using AiVideoStudio.Application.Interfaces.Auth;
+using AiVideoStudio.Domain.Interfaces;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using NSubstitute;
+
+namespace AiVideoStudio.IntegrationTests;
+
+public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+{
+    public IMediaAssetRepository MediaAssetRepository { get; } = Substitute.For<IMediaAssetRepository>();
+    public IProjectRepository ProjectRepository { get; } = Substitute.For<IProjectRepository>();
+    public ITimelineRepository TimelineRepository { get; } = Substitute.For<ITimelineRepository>();
+    public IUserRepository UserRepository { get; } = Substitute.For<IUserRepository>();
+    public IUserTokenRepository UserTokenRepository { get; } = Substitute.For<IUserTokenRepository>();
+    public IPasswordHistoryRepository PasswordHistoryRepository { get; } = Substitute.For<IPasswordHistoryRepository>();
+    public IEmailOutboxRepository EmailOutboxRepository { get; } = Substitute.For<IEmailOutboxRepository>();
+    public IAuditLogRepository AuditLogRepository { get; } = Substitute.For<IAuditLogRepository>();
+    public IRefreshTokenRepository RefreshTokenRepository { get; } = Substitute.For<IRefreshTokenRepository>();
+    public ITransactionManager TransactionManager { get; } = Substitute.For<ITransactionManager>();
+    public ICurrentUser CurrentUser { get; } = Substitute.For<ICurrentUser>();
+
+    public IPasswordHasher PasswordHasher { get; } = Substitute.For<IPasswordHasher>();
+    public IJwtTokenGenerator JwtGenerator { get; } = Substitute.For<IJwtTokenGenerator>();
+    public IRefreshTokenService RefreshTokenService { get; } = Substitute.For<IRefreshTokenService>();
+    public IAuthenticationService AuthenticationService { get; } = Substitute.For<IAuthenticationService>();
+    public IPermissionResolver PermissionResolver { get; } = Substitute.For<IPermissionResolver>();
+    public IEventBus EventBus { get; } = Substitute.For<IEventBus>();
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureAppConfiguration((context, config) =>
+        {
+            var testConfig = new Dictionary<string, string?>
+            {
+                { "Jwt:Key", "SuperSecretJwtKeyForIntegrationTesting1234567890!" },
+                { "Jwt:RefreshTokenSecret", "SuperSecretRefreshTokenKeyForTesting123456!" },
+                { "Jwt:Issuer", "AiVideoStudioTest" },
+                { "Jwt:Audience", "AiVideoStudioTestClient" },
+                { "Jwt:AccessTokenLifetimeMinutes", "60" },
+                { "Jwt:RefreshTokenLifetimeDays", "7" },
+                { "MongoDb:ConnectionString", "mongodb://localhost:27017" },
+                { "MongoDb:DatabaseName", "AiVideoStudioTestDb" },
+                { "Redis:ConnectionString", "localhost:6379" },
+                { "Storage:Provider", "Local" },
+                { "Storage:BasePath", "./test_storage" },
+                { "CorsOrigins:0", "http://localhost:3000" }
+            };
+
+            config.AddInMemoryCollection(testConfig);
+        });
+
+        builder.ConfigureTestServices(services =>
+        {
+            services.AddAuthentication("Test")
+                .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
+
+            services.Replace(ServiceDescriptor.Scoped(_ => MediaAssetRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => ProjectRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => TimelineRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => UserRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => UserTokenRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => PasswordHistoryRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => EmailOutboxRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => AuditLogRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => RefreshTokenRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => TransactionManager));
+            services.Replace(ServiceDescriptor.Scoped(_ => CurrentUser));
+
+            services.Replace(ServiceDescriptor.Scoped(_ => PasswordHasher));
+            services.Replace(ServiceDescriptor.Scoped(_ => JwtGenerator));
+            services.Replace(ServiceDescriptor.Scoped(_ => RefreshTokenService));
+            services.Replace(ServiceDescriptor.Scoped(_ => AuthenticationService));
+            services.Replace(ServiceDescriptor.Scoped(_ => PermissionResolver));
+            services.Replace(ServiceDescriptor.Scoped(_ => EventBus));
+        });
+    }
+}

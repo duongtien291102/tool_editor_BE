@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "AiVideoStudio.Domain/1.0.0": {
+        "dependencies": {
+          "AiVideoStudio.Shared": "1.0.0"
+        },
+        "runtime": {
+          "AiVideoStudio.Domain.dll": {}
+        }
+      },
+      "AiVideoStudio.Shared/1.0.0": {
+        "runtime": {
+          "AiVideoStudio.Shared.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AiVideoStudio.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AiVideoStudio.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

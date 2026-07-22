@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AiVideoStudio.Api</name>
+    </assembly>
+    <members>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Uploads a media asset for a project using multipart/form-data.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets a media asset by ID.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.GetProjectMedia(System.String,AiVideoStudio.Shared.ApiContracts.V1.Media.Requests.GetProjectMediaQueryRequest,System.Threading.CancellationToken)">
+            <summary>
+            Gets a paginated list of media assets for a project.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.Update(System.String,AiVideoStudio.Shared.ApiContracts.V1.Media.Requests.UpdateMediaRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates media asset metadata.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Soft deletes a media asset by ID.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ProjectsController.Create(AiVideoStudio.Shared.ApiContracts.V1.Projects.Requests.CreateProjectRequest,System.Threading.CancellationToken)">
+            <summary>
+            Creates a new project.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ProjectsController.GetById(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Gets a project by its unique identifier.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ProjectsController.GetProjects(AiVideoStudio.Shared.ApiContracts.V1.Projects.Requests.GetProjectsRequest,System.Threading.CancellationToken)">
+            <summary>
+            Gets a paginated list of projects with optional searching, sorting, and filtering.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ProjectsController.Update(System.String,AiVideoStudio.Shared.ApiContracts.V1.Projects.Requests.UpdateProjectRequest,System.Threading.CancellationToken)">
+            <summary>
+            Updates an existing project. Only Owner or Admin can update.
+            </summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ProjectsController.Delete(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Soft-deletes a project by its unique identifier. Only Owner or Admin can delete.
+            </summary>
+        </member>
+    </members>
+</doc>
