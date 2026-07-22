@@ -1,38 +1,33 @@
-# Sprint 6 — AI Provider Framework Walkthrough
+# Sprint 7 — Export Engine Walkthrough
 
 ## Outcome
 
-Sprint 6 adds a vendor-neutral AI provider framework on top of the existing render abstraction. RenderWorker now resolves providers exclusively through `IRenderProviderFactory`; it has no knowledge of concrete AI vendors.
+Sprint 7 delivers a complete mock FFmpeg export engine while preserving all previous module business logic. An export starts from a validated RenderJob reference, resolves timeline content, builds a render graph and typed FFmpeg command model, runs through an independent background worker, and produces a mock output manifest.
 
-## Delivered Components
+## Delivered
 
-- Application contracts: factory, registry, selector, health checker, API-key provider, capabilities, and provider options.
-- Shared provider lifecycle: `AbstractRenderProvider` implements logging, timing, cancellation, timeout, retry, capability validation, and exception mapping.
-- Provider discovery: `RenderProviderRegistry` is populated through `IEnumerable<IRenderProvider>` from DI and rejects duplicate routes.
-- Provider selection: `FirstAvailableProviderSelector` honors enabled state and health, preferring the requested route and falling back to the first available provider.
-- Secret boundary: `MemoryApiKeyProvider` implements `IApiKeyProvider`; no key is hardcoded and providers never access configuration directly.
-- Mock implementations: Internal, OpenAI, Runway, Kling, Veo, ElevenLabs, and Stable Video. No external AI endpoint is called.
-- Capability declarations for image, video, voice, subtitle, upscale, inpainting, outpainting, and image editing.
+- `ExportJob` aggregate with full state machine, retry, cancel, progress, versioning, encoding settings, events, and failure details.
+- CQRS commands/queries, DTOs, AutoMapper profile, FluentValidation, Result errors, and repository abstraction.
+- Timeline, track, clip, and asset resolvers.
+- Render graph nodes, edges, layers, dependencies, and timeline metadata.
+- Typed inputs, video/audio/subtitle filters, transitions, overlays, and output options.
+- `MockExportProvider` with Preparing/Rendering/Muxing phases, progress, cancellation, timeout, retry, and async mock output creation.
+- Independent export queue and hosted worker; no changes to Render Queue, RenderWorker, or AI Provider Framework logic.
+- Mongo export repository and DI composition.
+- Authorized Export API with complete Swagger response contracts.
 
-## RenderWorker Integration
+## Verification Walkthrough
 
-The worker receives `IRenderProviderFactory` by constructor injection and calls `GetProvider(job.Provider)`. Queue behavior, job state transitions, persistence, cancellation, and output mapping remain unchanged.
+The unit suite verifies aggregate transitions/version/events, retry/cancel/progress invariants, handlers, authorization results, validators, every resolver, graph construction, typed command construction, pipeline orchestration, provider phases/output/cancellation/timeout/retry, queue behavior, and Mongo repository insertion.
 
-During integration testing, a synchronization defect was confirmed: the worker waited for the complete five-second simulated progress loop after a provider had already returned. A linked progress token now stops the reporter immediately on provider completion. This is the only behavioral correction in the render pipeline.
+The integration suite verifies Create, Get, List, Retry, Cancel, Unauthorized, Forbidden, NotFound, plus an actual ExportWorker run from queue to Completed with a generated manifest.
 
-## Verification
-
-`ProviderFrameworkTests` contains 13 new unit tests for the factory, registry, selector, health checker, abstract base, mock providers, and API-key provider.
-
-`ProviderFrameworkIntegrationTests` contains 3 new integration tests for DI/provider resolution, unhealthy-provider fallback, and RenderWorker processing with OpenAI and Runway jobs.
-
-Final result:
+Final verified totals:
 
 ```text
-Build succeeded: 0 errors, 2 reported instances of the existing NU1903 warning.
-Unit tests:       185 passed, 0 failed.
-Integration:      43 passed, 0 failed.
-Total:            228 passed, 0 failed.
+Unit tests:        207 passed
+Integration tests: 51 passed
+Total:             258 passed, 0 failed, 0 skipped
 ```
 
-Auth, Project, Media, Script, Timeline, and Render regression suites all pass. No Git command was used.
+No FFmpeg process or real external provider was executed. No Git command was used.

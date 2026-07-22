@@ -24,6 +24,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     public IAuditLogRepository AuditLogRepository { get; } = Substitute.For<IAuditLogRepository>();
     public IRefreshTokenRepository RefreshTokenRepository { get; } = Substitute.For<IRefreshTokenRepository>();
     public IRenderJobRepository RenderJobRepository { get; } = Substitute.For<IRenderJobRepository>();
+    public IExportJobRepository ExportJobRepository { get; } = Substitute.For<IExportJobRepository>();
     public ITransactionManager TransactionManager { get; } = Substitute.For<ITransactionManager>();
     public ICurrentUser CurrentUser { get; } = Substitute.For<ICurrentUser>();
 
@@ -51,6 +52,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 { "Redis:ConnectionString", "localhost:6379" },
                 { "Storage:Provider", "Local" },
                 { "Storage:BasePath", "./test_storage" },
+                { "Export:OutputDirectory", "./test_exports" },
+                { "Export:TimeoutSeconds", "5" },
+                { "Export:RetryCount", "0" },
+                { "Export:MockStepDelayMilliseconds", "1" },
                 { "CorsOrigins:0", "http://localhost:3000" }
             };
 
@@ -72,6 +77,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.Replace(ServiceDescriptor.Scoped(_ => AuditLogRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => RefreshTokenRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => RenderJobRepository));
+            services.Replace(ServiceDescriptor.Scoped(_ => ExportJobRepository));
             services.Replace(ServiceDescriptor.Scoped(_ => TransactionManager));
             services.Replace(ServiceDescriptor.Scoped(_ => CurrentUser));
 

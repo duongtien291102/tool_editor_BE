@@ -1,60 +1,72 @@
-# Verification Report — Sprint 6 AI Provider Framework
+# Verification Report — Sprint 7 Export Engine
 
 ## Executive Summary
 
-Sprint 6 is complete. The solution builds with 0 errors and all 228 tests pass. No Git command was executed. No real AI API integration or hardcoded API key was introduced.
+Sprint 7 is complete. The mock export engine builds and all 258 tests pass. Previous module suites remain green. No FFmpeg executable, Docker render, cloud worker, new AI integration, hardcoded FFmpeg path, or Git command was used.
 
-## Provider Matrix
+## Implementation Matrix
 
-| Route | Implementation | Base class | Options | Health-aware | Result |
-| :--- | :--- | :--- | :---: | :---: | :---: |
-| Internal | `MockRenderProvider` | `AbstractRenderProvider` | Yes | Yes | PASS |
-| OpenAI | `MockOpenAIProvider` | `AbstractRenderProvider` | Yes | Yes | PASS |
-| Runway | `MockRunwayProvider` | `AbstractRenderProvider` | Yes | Yes | PASS |
-| Kling | `MockKlingProvider` | `AbstractRenderProvider` | Yes | Yes | PASS |
-| Veo | `MockVeoProvider` | `AbstractRenderProvider` | Yes | Yes | PASS |
-| ElevenLabs | `MockElevenLabsProvider` | `AbstractRenderProvider` | Yes | Yes | PASS |
-| StableVideo | `MockStableVideoProvider` | `AbstractRenderProvider` | Yes | Yes | PASS |
-
-## Factory Coverage
-
-| Scenario | Verification | Result |
+| Area | Delivered | Result |
 | :--- | :--- | :---: |
-| Resolve preferred provider | Unit + integration | PASS |
-| Delegate to selector | Unit | PASS |
-| Worker depends on factory | Integration worker execution | PASS |
-| Multiple vendor routes | OpenAI and Runway worker jobs | PASS |
-| No vendor switch-case | Architecture inspection | PASS |
+| Domain aggregate and enums | State machine, progress, version, retry, cancel, encoding/output metadata | PASS |
+| Domain events | Started, progress, completed, failed, cancelled | PASS |
+| CQRS | 4 commands, 2 queries, handlers, Result errors | PASS |
+| Application quality | DTOs, AutoMapper, FluentValidation, cancellation tokens | PASS |
+| Resolver chain | Timeline, tracks, clips, assets | PASS |
+| Render graph | Timeline, nodes, edges, layers, dependencies | PASS |
+| FFmpeg model | Inputs, all filter categories, transitions, overlay, output options | PASS |
+| Mock provider | Phase progress, cancellation, timeout, retry, manifest output | PASS |
+| Worker | Independent queue, active cancellation, scoped pipeline, persistence | PASS |
+| Persistence | Mongo `exportJobs` collection and repository | PASS |
+| API | Five authorized endpoints and Swagger response metadata | PASS |
 
-## Registry Coverage
+## State Machine Coverage
+
+| Transition/invariant | Result |
+| :--- | :---: |
+| Pending → Preparing → Rendering → Muxing → Completed | PASS |
+| Active/Pending → Cancelled | PASS |
+| Active → Failed → Pending via Retry | PASS |
+| Maximum retry enforcement | PASS |
+| Monotonic progress and 100-on-complete | PASS |
+| Invalid terminal transitions rejected | PASS |
+| Version increments on mutations | PASS |
+| Domain event publication | PASS |
+
+## API Integration Matrix
 
 | Scenario | Result |
 | :--- | :---: |
-| Discover all seven DI registrations | PASS |
-| Resolve by `RenderProvider` | PASS |
-| Enumerate registrations | PASS |
-| Reject duplicate route | PASS |
-| Runtime registration contract | PASS |
-
-## Health Coverage
-
-| Scenario | Result |
-| :--- | :---: |
-| Healthy by default | PASS |
-| Change mock health state | PASS |
-| Skip unhealthy preferred provider | PASS |
-| Fall back to first enabled healthy provider | PASS |
-| Fail when no provider is available | PASS |
+| Create | PASS |
+| Get | PASS |
+| Project list | PASS |
+| Retry | PASS |
+| Cancel | PASS |
+| Unauthorized | PASS |
+| Forbidden | PASS |
+| NotFound | PASS |
+| Worker queue → pipeline → output | PASS |
 
 ## Test Matrix
 
-| Suite | Baseline | Sprint 6 added | Final | Result |
+| Suite | Sprint 6 baseline | Sprint 7 added | Final | Result |
 | :--- | ---: | ---: | ---: | :---: |
-| Unit tests | 172 | 13 | 185 | PASS |
-| Integration tests | 40 | 3 | 43 | PASS |
-| Total | 212 | 16 | 228 | PASS |
+| Unit | 185 | 22 | 207 | PASS |
+| Integration | 43 | 8 | 51 | PASS |
+| Total | 228 | 30 | 258 | PASS |
 
-Sprint 6 unit coverage includes factory, registry, selector, health state, base retry, cancellation, exception mapping, capability rejection, mock implementations, and memory API-key storage. Integration coverage includes provider resolution, factory/registry wiring, health fallback, and RenderWorker with multiple providers.
+## Regression Matrix
+
+| Module | Business logic modified | Regression result |
+| :--- | :---: | :---: |
+| Auth | No | PASS |
+| Project | No | PASS |
+| Media | No | PASS |
+| Script | No | PASS |
+| Timeline | No | PASS |
+| Render Queue / Worker | No | PASS |
+| AI Provider Framework | No | PASS |
+| Export Engine | New | PASS |
 
 ## Build Result
 
@@ -68,11 +80,10 @@ Result:
 
 ```text
 Build succeeded.
-    2 Warning(s)
     0 Error(s)
 ```
 
-Both warning lines are the same pre-existing `NU1903` advisory for AutoMapper 13.0.1, emitted during restore and build. No new compiler warning was introduced by Sprint 6.
+The only reported warning is the pre-existing AutoMapper 13.0.1 `NU1903` advisory (shown during restore/build). No Sprint 7 compiler warning was introduced.
 
 ## Test Result
 
@@ -85,27 +96,16 @@ dotnet test
 Result:
 
 ```text
-AiVideoStudio.UnitTests:        185 passed, 0 failed, 0 skipped
-AiVideoStudio.IntegrationTests:  43 passed, 0 failed, 0 skipped
-Grand total:                    228 passed, 0 failed
+AiVideoStudio.UnitTests:        207 passed, 0 failed, 0 skipped
+AiVideoStudio.IntegrationTests:  51 passed, 0 failed, 0 skipped
+Grand total:                    258 passed, 0 failed, 0 skipped
 ```
 
-## Regression Matrix
+## Mandatory Confirmations
 
-| Module | Production changes | Regression suite | Result |
-| :--- | :---: | :---: | :---: |
-| Auth | None | Unit + integration | PASS |
-| Project | None | Unit + integration | PASS |
-| Media | None | Unit + integration | PASS |
-| Script | None | Unit | PASS |
-| Timeline | None | Unit + integration | PASS |
-| Render | Factory integration + confirmed progress-wait bug fix | Unit + integration | PASS |
-| Provider Framework | New | 13 unit + 3 integration | PASS |
-
-## Completion Declaration
-
-- Factory, registry, selector, health checking, capability declarations, options, secret abstraction, base lifecycle, and all required mock providers are implemented.
-- RenderWorker has no concrete provider dependency.
-- Adding a provider requires an implementation, DI registration, configuration, and tests; no current factory/registry/worker rewrite is required.
-- Real AI API calls remain intentionally absent.
-- Git usage: none.
+- Mock provider only; FFmpeg was not executed.
+- No executable path is hardcoded.
+- No placeholder, TODO, stub, or incomplete abstraction was added.
+- All new async operations accept/propagate cancellation.
+- All old and new tests pass.
+- No Git command was executed.

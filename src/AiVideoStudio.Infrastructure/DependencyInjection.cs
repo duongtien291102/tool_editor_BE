@@ -5,6 +5,7 @@ using AiVideoStudio.Application.Interfaces.Auth;
 using AiVideoStudio.Application.Storage;
 using AiVideoStudio.Application.Configuration;
 using AiVideoStudio.Application.Interfaces.Render;
+using AiVideoStudio.Application.Interfaces.Export;
 using AiVideoStudio.Infrastructure.Auth;
 using AiVideoStudio.Infrastructure.Background;
 using AiVideoStudio.Infrastructure.Configuration;
@@ -55,6 +56,7 @@ public static class DependencyInjection
         services.AddScoped<AiVideoStudio.Domain.Interfaces.IEmailOutboxRepository, AiVideoStudio.Infrastructure.Persistence.Repositories.EmailOutboxRepository>();
         services.AddScoped<AiVideoStudio.Domain.Interfaces.IAuditLogRepository, AiVideoStudio.Infrastructure.Persistence.Repositories.AuditLogRepository>();
         services.AddScoped<AiVideoStudio.Domain.Interfaces.IRenderJobRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.RenderJobRepository>();
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.IExportJobRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.ExportJobRepository>();
         services.AddScoped<AiVideoStudio.Application.Interfaces.ITransactionManager, AiVideoStudio.Infrastructure.Mongo.MongoTransactionManager>();
         services.AddTransient<IStorageProvider, LocalStorageProvider>();
         services.AddSingleton<IEventBus, InMemoryEventBus>();
@@ -87,6 +89,25 @@ public static class DependencyInjection
         services.AddSingleton<AiVideoStudio.Infrastructure.Render.RenderWorker>();
         services.AddSingleton<IRenderJobCanceller>(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Render.RenderWorker>());
         services.AddHostedService(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Render.RenderWorker>());
+
+        // Export Engine (independent from Render Queue and AI provider framework)
+        services.AddOptions<ExportOptions>()
+            .Bind(configuration.GetSection(ExportOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services.AddSingleton<IExportQueue, AiVideoStudio.Infrastructure.Export.InMemoryExportQueue>();
+        services.AddScoped<ITimelineResolver, AiVideoStudio.Infrastructure.Export.TimelineResolver>();
+        services.AddScoped<ITrackResolver, AiVideoStudio.Infrastructure.Export.TrackResolver>();
+        services.AddScoped<IClipResolver, AiVideoStudio.Infrastructure.Export.ClipResolver>();
+        services.AddScoped<IAssetResolver, AiVideoStudio.Infrastructure.Export.AssetResolver>();
+        services.AddSingleton<IExportGraphBuilder, AiVideoStudio.Infrastructure.Export.ExportGraphBuilder>();
+        services.AddSingleton<IFFmpegCommandBuilder, AiVideoStudio.Infrastructure.Export.FFmpegCommandBuilder>();
+        services.AddSingleton<IExportProvider, AiVideoStudio.Infrastructure.Export.MockExportProvider>();
+        services.AddScoped<IExportPipeline, AiVideoStudio.Infrastructure.Export.ExportPipeline>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.Export.ExportWorker>();
+        services.AddSingleton<IExportJobCanceller>(provider =>
+            provider.GetRequiredService<AiVideoStudio.Infrastructure.Export.ExportWorker>());
+        services.AddHostedService(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Export.ExportWorker>());
 
         services.AddTransient<ISeeder, UserSeeder>();
         services.AddTransient<ISeeder, RoleSeeder>();

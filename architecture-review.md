@@ -1,47 +1,47 @@
-# Architecture Review — Sprint 6 AI Provider Framework
+# Architecture Review — Sprint 7 Export Engine
 
 ## Executive Summary
 
-The provider framework satisfies dependency inversion: policy contracts live in Application, provider mechanics live in Infrastructure, and RenderWorker depends on a factory contract rather than vendor implementations. The design supports additional providers through DI registration without a factory switch-case or render-pipeline rewrite.
+The Export Engine follows Clean Architecture and isolates rendering implementation details behind `IExportProvider`. Domain owns export invariants; Application owns CQRS and vendor-neutral pipeline contracts; Infrastructure owns resolution, graph/command construction, queue/worker execution, Mongo persistence, and the mock adapter; API owns HTTP composition.
 
-## Boundary Review
+## Layer Boundaries
 
-| Layer | Responsibility | Sprint 6 additions |
-| :--- | :--- | :--- |
-| Domain | Render provider identity and render job state | No behavioral change |
-| Application | Vendor-neutral contracts and configuration model | Factory, registry, selector, health, API keys, capability enum, options |
-| Infrastructure | Policy implementations and mock adapters | Base provider, registry, selector, health mock, key store, seven mock routes |
-| API | Composition root and configuration binding | Named provider options and DI activation |
+| Layer | Responsibilities |
+| :--- | :--- |
+| Domain | Export aggregate, statuses, codecs, container, events, repository contract |
+| Application | Commands, queries, DTOs, mapping, validation, Result handling, pipeline abstractions and models |
+| Infrastructure | Resolvers, graph builder, command builder, mock provider, queue, worker, Mongo repository |
+| API | Authorized routes, Swagger contracts, request mapping, HTTP result mapping |
 
-No Auth, Project, Media, Script, or Timeline production file was changed.
+Auth, Project, Media, Script, Timeline, Render Queue, and AI Provider Framework business logic remain unchanged.
 
-## Dependency and Extensibility Review
+## Dependency Flow
 
-- RenderWorker's only provider-selection dependency is `IRenderProviderFactory`.
-- The factory delegates selection and contains no vendor-specific logic.
-- The registry discovers `IEnumerable<IRenderProvider>` from DI.
-- Concrete providers override `RenderInternalAsync`; lifecycle behavior cannot drift between vendors.
-- `IProviderSelector` permits a future round-robin, weighted, cost-aware, or capability-aware policy without worker changes.
-- `IProviderHealthChecker` permits a future active/cached health service without provider changes.
-- `IApiKeyProvider` permits vault integrations without exposing configuration to provider implementations.
+Dependencies point inward. Infrastructure consumes Application interfaces and Domain repositories; Application consumes Domain entities and Shared Result contracts. Domain has no Infrastructure/API dependency. `ExportController` dispatches MediatR messages and contains no export business logic.
 
-## Resilience Review
+## Pipeline Review
 
-`AbstractRenderProvider` applies bounded timeout and retry options, caller cancellation, exponential retry delay, duration measurement, structured logs, and deterministic exception-to-error mapping. Disabled or capability-incompatible providers return explicit failure codes.
+The pipeline separates content resolution from graph construction and execution. This prevents a future FFmpeg/Docker/cloud adapter from depending directly on repositories or domain aggregates. A provider receives only a complete `FFmpegCommandModel` and progress callback.
 
-`FirstAvailableProviderSelector` skips disabled and unhealthy providers. It throws a typed `ProviderUnavailableException` only when no usable registration exists.
+The graph explicitly represents node timing, layer ordering, sequence edges, and source dependencies. The command object explicitly represents inputs, filter categories, transitions, overlays, and output settings without shell escaping or executable concerns.
 
-## Security Review
+## Concurrency and Cancellation
 
-- No API key is embedded in source or checked-in configuration.
-- Providers do not depend on `IConfiguration`.
-- API keys are accessed only through `IApiKeyProvider`.
-- `MemoryApiKeyProvider` is an intentional development implementation; production may replace it with a vault adapter at DI composition.
+`ExportWorker` and `RenderWorker` are separate hosted services with separate queues and active-job cancellation registries. Cancellation flows from API handler to worker token, through pipeline and provider, into delay and file operations. Worker state persistence uses its own scoped repository/pipeline and does not affect Render Queue behavior.
 
-## Render Pipeline Review
+## Resilience and Configuration
 
-The existing queue, repository, MediatR progress update, aggregate transitions, result parsing, retry-count backoff, and cancellation surface are retained. The provider resolution line is replaced by factory resolution. A confirmed progress-task wait defect was corrected with a linked cancellation token; integration coverage prevents recurrence.
+- Timeout, retry, mock timing, and output directory are validated options.
+- Provider retries are bounded and cancellation-aware.
+- Missing timelines/assets fail the pipeline deterministically.
+- Aggregate progress cannot decrease or reach 100 before completion.
+- Terminal states reject invalid transitions.
+- Output paths are configuration-derived; no FFmpeg path exists in source.
 
-## Production Readiness Assessment
+## Security and API Review
 
-The framework is production-ready as an extensibility foundation: contracts are stable, provider lifecycle concerns are centralized, configuration is validated, secrets are abstracted, health fallback is implemented, mock adapters are deterministic, and the entire regression suite passes. Real vendor clients remain intentionally out of scope.
+Handlers distinguish unauthenticated (`Unauthorized`) from authenticated non-owner (`Forbidden`) access. Owner/admin checks cover create, get, list, retry, and cancel workflows. Controller routes use `[Authorize]` and publish response types for success, validation, missing resource, unauthorized, and forbidden outcomes.
+
+## Extensibility Assessment
+
+Local FFmpeg, Docker FFmpeg, or a cloud render worker can be introduced by replacing `IExportProvider`. The controller, CQRS handlers, queue, worker, resolver chain, render graph, and Render Pipeline do not require structural changes. The architecture is ready for a real adapter while Sprint 7 intentionally remains mock-only.

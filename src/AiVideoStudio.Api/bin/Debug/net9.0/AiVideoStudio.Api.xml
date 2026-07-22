@@ -4,6 +4,21 @@
         <name>AiVideoStudio.Api</name>
     </assembly>
     <members>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ExportController.Create(AiVideoStudio.Api.Controllers.v1.CreateExportRequest,System.Threading.CancellationToken)">
+            <summary>Create and queue a timeline export.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ExportController.Get(System.String,System.Threading.CancellationToken)">
+            <summary>Get an export job by ID.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ExportController.List(System.String,System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>List export jobs for a project.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ExportController.Cancel(System.String,System.Threading.CancellationToken)">
+            <summary>Cancel a pending or active export.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.ExportController.Retry(System.String,System.Threading.CancellationToken)">
+            <summary>Retry a failed export.</summary>
+        </member>
         <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.Upload(Microsoft.AspNetCore.Http.IFormFile,System.String,System.Threading.CancellationToken)">
             <summary>
             Uploads a media asset for a project using multipart/form-data.

@@ -29,5 +29,6 @@ public class MongoDbContext
     public IMongoCollection<MediaAsset> MediaAssets => Database.GetCollection<MediaAsset>("mediaAssets");
     public IMongoCollection<Job> Jobs => Database.GetCollection<Job>("jobs");
     public IMongoCollection<RenderJob> RenderJobs => Database.GetCollection<RenderJob>("renderJobs");
+    public IMongoCollection<ExportJob> ExportJobs => Database.GetCollection<ExportJob>("exportJobs");
     public IMongoCollection<Setting> Settings => Database.GetCollection<Setting>("settings");
 }
