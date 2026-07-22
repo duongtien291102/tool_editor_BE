@@ -44,7 +44,33 @@
             Soft deletes a media asset by ID.
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:AiVideoStudio.Api.Controllers.v1.OperationsController.Failure(AiVideoStudio.Shared.Responses.Result)" -->
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Health(System.Threading.CancellationToken)">
+            <summary>Return the complete production dependency health report.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Ready(System.Threading.CancellationToken)">
+            <summary>Return readiness for traffic, including external dependencies.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Live(System.Threading.CancellationToken)">
+            <summary>Return process liveness without external dependency checks.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Configuration(System.Threading.CancellationToken)">
+            <summary>Return redacted runtime configuration records.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Configuration(AiVideoStudio.Api.Controllers.v1.UpdateConfigurationRequest,System.Threading.CancellationToken)">
+            <summary>Update a dynamic system configuration value.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Metrics">
+            <summary>Return the in-process operational metrics snapshot.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Audit(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Return paginated audit history.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Notifications(System.Int32,System.Int32,System.Threading.CancellationToken)">
+            <summary>Return notifications owned by the current user.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.OperationsController.Maintenance(AiVideoStudio.Api.Controllers.v1.RunMaintenanceRequest,System.Threading.CancellationToken)">
+            <summary>Start retention and temporary-file maintenance.</summary>
+        </member>
         <member name="M:AiVideoStudio.Api.Controllers.v1.ProjectsController.Create(AiVideoStudio.Shared.ApiContracts.V1.Projects.Requests.CreateProjectRequest,System.Threading.CancellationToken)">
             <summary>
             Creates a new project.

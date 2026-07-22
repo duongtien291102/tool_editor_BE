@@ -1,0 +1,68 @@
+2026-07-22 14:31:45.485 +07:00 [INF] RenderWorker is starting.
+2026-07-22 14:31:45.489 +07:00 [INF] ExportWorker started.
+2026-07-22 14:31:45.499 +07:00 [INF] RenderWorker is stopping.
+2026-07-22 14:31:45.677 +07:00 [ERR] An unhandled exception occurred: {Message} {"MachineName":"JAIKADUONG","Environment":"Production","ApplicationVersion":"15.0.0.0","TraceId":"8a7e8ce36fe622f599e0761631cd1540","Payload":"Validation failed."}
+AiVideoStudio.Shared.Exceptions.ValidationException: Validation failed.
+   at AiVideoStudio.Application.Behaviors.ValidationPipelineBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\Behaviors\ValidationPipelineBehavior.cs:line 34
+   at AiVideoStudio.Api.Controllers.v1.AuthController.Login(LoginRequest request, CancellationToken cancellationToken) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Controllers\v1\AuthController.cs:line 38
+   at lambda_method282(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at AiVideoStudio.Api.Middlewares.RequestMetricsMiddleware.InvokeAsync(HttpContext context, IMetricsCollector metrics, IAuditWriter audit) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\ProductionOperationsMiddlewares.cs:line 4
+   at AiVideoStudio.Api.Middlewares.ProductionSecurityMiddleware.InvokeAsync(HttpContext context, IRateLimiter limiter) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\ProductionOperationsMiddlewares.cs:line 3
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at AiVideoStudio.Api.Middlewares.GlobalExceptionMiddleware.InvokeAsync(HttpContext context, IAppLogger`1 logger) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\GlobalExceptionMiddleware.cs:line 28
+2026-07-22 14:31:45.793 +07:00 [ERR] An unhandled exception occurred: {Message} {"MachineName":"JAIKADUONG","Environment":"Production","ApplicationVersion":"15.0.0.0","TraceId":"0285031f67b2574230d25bae996a9eb1","Payload":"Validation failed."}
+AiVideoStudio.Shared.Exceptions.ValidationException: Validation failed.
+   at AiVideoStudio.Application.Behaviors.ValidationPipelineBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\Behaviors\ValidationPipelineBehavior.cs:line 34
+   at AiVideoStudio.Api.Controllers.v1.ProjectsController.Create(CreateProjectRequest request, CancellationToken cancellationToken) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Controllers\v1\ProjectsController.cs:line 44
+   at lambda_method350(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at AiVideoStudio.Api.Middlewares.RequestMetricsMiddleware.InvokeAsync(HttpContext context, IMetricsCollector metrics, IAuditWriter audit) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\ProductionOperationsMiddlewares.cs:line 4
+   at AiVideoStudio.Api.Middlewares.ProductionSecurityMiddleware.InvokeAsync(HttpContext context, IRateLimiter limiter) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\ProductionOperationsMiddlewares.cs:line 3
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at AiVideoStudio.Api.Middlewares.GlobalExceptionMiddleware.InvokeAsync(HttpContext context, IAppLogger`1 logger) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\GlobalExceptionMiddleware.cs:line 28
+2026-07-22 14:31:45.832 +07:00 [ERR] An unhandled exception occurred: {Message} {"MachineName":"JAIKADUONG","Environment":"Production","ApplicationVersion":"15.0.0.0","TraceId":"75029954d803d98c4f4a3ea8a076c86e","Payload":"Validation failed."}
+AiVideoStudio.Shared.Exceptions.ValidationException: Validation failed.
+   at AiVideoStudio.Application.Behaviors.ValidationPipelineBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Application\Behaviors\ValidationPipelineBehavior.cs:line 34
+   at AiVideoStudio.Api.Controllers.v1.WorkflowController.Create(CreateWorkflowRequest r, CancellationToken ct) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Controllers\v1\WorkflowController.cs:line 19
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at AiVideoStudio.Api.Middlewares.RequestMetricsMiddleware.InvokeAsync(HttpContext context, IMetricsCollector metrics, IAuditWriter audit) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\ProductionOperationsMiddlewares.cs:line 4
+   at AiVideoStudio.Api.Middlewares.ProductionSecurityMiddleware.InvokeAsync(HttpContext context, IRateLimiter limiter) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\ProductionOperationsMiddlewares.cs:line 3
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at AiVideoStudio.Api.Middlewares.GlobalExceptionMiddleware.InvokeAsync(HttpContext context, IAppLogger`1 logger) in E:\Tool_editor\tool_editor_BE\src\AiVideoStudio.Api\Middlewares\GlobalExceptionMiddleware.cs:line 28

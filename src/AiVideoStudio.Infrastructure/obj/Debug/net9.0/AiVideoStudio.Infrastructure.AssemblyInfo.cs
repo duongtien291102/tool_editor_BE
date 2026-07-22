@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AiVideoStudio.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+132484ee75281d361daa69d49d479de98de0092e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4bb8d633a6aac3adb1322c1078324908066d5412")]
 [assembly: System.Reflection.AssemblyProductAttribute("AiVideoStudio.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AiVideoStudio.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -113,8 +113,6 @@ MongoConventionPackInitializer.Initialize();
 var app = builder.Build();
 
 app.UseMiddleware<CorrelationIdMiddleware>();
-app.UseMiddleware<ProductionSecurityMiddleware>();
-app.UseMiddleware<RequestMetricsMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
@@ -127,6 +125,8 @@ app.UseSwaggerUI(c =>
 app.UseCors("DefaultCorsPolicy");
 
 app.UseAuthentication();
+app.UseMiddleware<ProductionSecurityMiddleware>();
+app.UseMiddleware<RequestMetricsMiddleware>();
 app.UseAuthorization();
 
 app.MapHealthChecks("/health");

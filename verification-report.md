@@ -1,24 +1,28 @@
-# Verification Report — Sprint 9 Workflow Engine
+# Verification Report — Sprint 10 Operations Foundation
 
 ## Test matrix
 
-| Suite | Sprint 8 baseline | Sprint 9 added | Final |
+| Suite | Passed | Failed | Skipped |
 | :--- | ---: | ---: | ---: |
-| Unit | 219 | 22 | 241 |
-| Integration | 59 | 10 | 69 |
-| Total | 278 | 32 | 310 |
+| Unit | 263 | 0 | 0 |
+| Integration | 78 | 0 | 0 |
+| Total | 341 | 0 | 0 |
 
-| Coverage area | Result |
+## Coverage matrix
+
+| Area | Coverage |
 | :--- | :---: |
-| Aggregate, DAG/cycle/unknown/duplicate validation | PASS |
-| State machine, retry, cancel, pause/resume, variables | PASS |
-| Dependency and condition resolution, skip semantics | PASS |
-| Scheduler deduplication and worker registration | PASS |
-| Executor completion, context propagation, timeout/failure | PASS |
-| CQRS validation, owner/admin authorization, Result mapping | PASS |
-| Controller create/get/list/run/cancel/retry/pause/resume/update/delete/execution | PASS |
-| Mongo repositories and index definitions | PASS |
-| Capability-based provider resolution through existing mocks | PASS |
+| Audit entity/repository/writer and HTTP audit query | PASS |
+| Notification lifecycle/dispatcher/repository/owner query | PASS |
+| Quota event, usage tracking, and validation | PASS |
+| Configuration mapping, repository, admin GET/PUT | PASS |
+| Health liveness and health/ready/live endpoints | PASS |
+| Metrics counters, gauges, averages, disabled mode, cardinality cap, endpoint | PASS |
+| Maintenance lifecycle, repository, disabled worker, admin endpoint | PASS |
+| Rate limiting and signed URL round trip | PASS |
+| Correlation/request/security headers and request context | PASS |
+| CQRS handlers, Result mapping, authorization, validators | PASS |
+| Mongo repositories | PASS |
 
 ## Regression matrix
 
@@ -29,21 +33,16 @@
 | Media | PASS |
 | Script | PASS |
 | Timeline | PASS |
-| Render Queue | PASS |
-| AI Provider Framework | PASS |
-| Export Engine | PASS |
-| Storage Engine | PASS |
+| Render | PASS |
+| AI Provider | PASS |
+| Export | PASS |
+| Storage | PASS |
+| Workflow | PASS |
 
 ## Build and test result
 
-`dotnet build AiVideoStudio.slnx --no-restore`: 0 errors. Existing warnings include the pre-existing AutoMapper NU1903 advisory and older nullable warnings; no warning originates from a Sprint 9 source file.
+Final `dotnet build AiVideoStudio.slnx --nologo --no-restore`: 0 errors and 15 existing warnings (1 NU1903 notice for AutoMapper 13.0.1 plus nullable warnings in legacy Render/Auth/Script/Timeline files). No warning originates from the Operations slice.
 
-`dotnet test`:
+`dotnet test AiVideoStudio.slnx --no-build --nologo`: 341 passed, 0 failed, 0 skipped.
 
-```text
-Unit:        241 passed, 0 failed, 0 skipped
-Integration: 69 passed, 0 failed, 0 skipped
-Total:       310 passed, 0 failed, 0 skipped
-```
-
-No real AI API, cloud provider, hardcoded provider selection, hardcoded prompt, or Git command was used.
+No Git command was used. No business logic in the existing Auth, Project, Media, Script, Timeline, Render, AI Provider, Export, Storage, or Workflow modules was modified.

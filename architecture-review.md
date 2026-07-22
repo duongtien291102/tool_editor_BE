@@ -1,20 +1,22 @@
-# Architecture Review — Sprint 9 Workflow Engine
+# Architecture Review — Sprint 10 Operations Foundation
 
 ## Clean Architecture boundaries
 
-- Domain owns `AIWorkflow`, steps, executions, variables, templates, triggers, state transitions, DAG invariants, and workflow domain events.
-- Application owns CQRS contracts/handlers, Result errors, DTOs, mappings, validators, authorization, and the step-dispatch abstraction.
-- Infrastructure owns DAG resolution, scheduling, execution, capability dispatch, worker lifecycle, Mongo repositories, and indexes.
-- API owns only HTTP request/response mapping and Swagger metadata.
+- Domain owns operational aggregates, enums, domain events, and persistence contracts.
+- Application owns CQRS contracts and handlers, Result errors, DTOs, mappings, validators, owner/admin decisions, and provider-neutral service abstractions.
+- Infrastructure owns Mongo repositories, dependency probes, metrics storage, operational dispatchers, signed URLs, rate limiting, maintenance execution, and worker lifecycle.
+- API owns HTTP contracts, Swagger descriptions, response mapping, and middleware composition.
 
-## Execution and recovery
+Dependencies point inward and production-provider details do not leak into the domain or application. Configuration is bound through typed Options; sensitive dynamic values are redacted at the application mapping boundary.
 
-The scheduler deduplicates IDs and never blocks a request thread. The background worker starts execution tasks with cancellation support. Only nodes whose dependencies reached a successful terminal state are considered. Conditions can skip a node; outputs are namespaced by step ID and also exposed to following steps. Each attempt has its own timeout token. Failures retry up to `MaxRetries`, then fail both workflow and execution. Cancellation cascades to non-terminal steps. Pause is persisted and polled between execution boundaries; resume continues the same execution.
+## Operational reliability
 
-## Provider boundary
+Liveness avoids external calls, while readiness uses a bounded timeout and reports individual dependencies. Metrics are thread-safe, can be disabled, and cap dynamic series. Maintenance persists its lifecycle around retention work and records both cleanup throughput and failures. Correlation ID, request ID, trace ID, and audit metadata create a consistent diagnostic chain.
 
-Workflow step type maps to a capability, not to a provider. Resolution filters `IRenderProviderRegistry` by capability and `IProviderHealthChecker`, then obtains the implementation from `IRenderProviderFactory`. Only existing mocks are registered. Render/export/custom orchestration remains behind a dispatcher result and does not alter prior queues or aggregates.
+## Security and authorization
 
-## Persistence and compatibility
+Owner checks protect notification and usage operations. Admin checks protect audit, configuration, metrics, and maintenance. The API adds defensive response headers and a provider-neutral rate-limit hook. Signed URLs are HMAC-based, expiry-bound, and configured outside code.
 
-Workflows and executions are separate Mongo collections. Workflow indexes cover `ProjectId`, `OwnerId`, `Status`, `CreatedAt`, and `UpdatedAt`; execution indexes cover workflow chronology and status. Sprint 9 is additive. Auth, Project, Media, Script, Timeline, Render, Provider, Export, and Storage business logic remains unchanged.
+## Compatibility
+
+Sprint 10 extends dependency injection and the HTTP pipeline but does not change business logic in Auth, Project, Media, Script, Timeline, Render, AI Provider, Export, Storage, or Workflow. Existing regression tests remain part of the full solution run.

@@ -1,0 +1,20 @@
+{
+  "AssetId": "133cba76-8511-4107-b276-55ee2f6a31a3",
+  "FileName": "x.mp4",
+  "ContentType": "video/mp4",
+  "FileSize": 6,
+  "Checksum": "bef57ec7f53a6d40beb640a780a639c83bc29ac8a9816f1fc6c5c6dcd93c4721",
+  "StoragePath": "p/assets/133cba76-8511-4107-b276-55ee2f6a31a3.mp4",
+  "ThumbnailPath": "p/derived/133cba76-8511-4107-b276-55ee2f6a31a3/thumbnail-video.txt",
+  "Metadata": {
+    "Width": 1920,
+    "Height": 1080,
+    "Duration": 60,
+    "Kind": "video",
+    "Properties": {
+      "mock": "true",
+      "length": "6"
+    }
+  },
+  "CreatedAt": "2026-07-22T07:31:45.7981241+00:00"
+}
