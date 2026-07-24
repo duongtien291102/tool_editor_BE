@@ -1,4 +1,0 @@
-2026-07-22 16:20:14.765 +07:00 [INF] RenderWorker is starting.
-2026-07-22 16:20:14.770 +07:00 [INF] ExportWorker started.
-2026-07-22 16:20:14.809 +07:00 [INF] HTTP Request Completed {"MachineName":"JAIKADUONG","Environment":"Production","ApplicationVersion":"15.0.0.0","TraceId":"f3d8ffa3fa4677042f2cd1c7f259ecd4","Payload":{"Method":"GET","Path":{"Value":"/api/v1/export/anything","HasValue":true,"$type":"PathString"},"StatusCode":401,"DurationMs":21,"CorrelationId":"52848c41-8afe-4504-9d9e-b941b855d292","UserId":"Anonymous","IP":null,"UserAgent":""}}
-2026-07-22 16:20:14.811 +07:00 [INF] RenderWorker is stopping.

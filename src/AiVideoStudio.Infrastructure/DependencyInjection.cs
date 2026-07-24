@@ -47,7 +47,13 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IPermissionResolver, PermissionResolver>();
         services.AddScoped<IAuthorizationService, AuthorizationService>();
+        EnvLoader.Load();
 
+        services.AddSingleton<MongoDB.Driver.IMongoClient>(sp =>
+        {
+            var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<MongoOptions>>().Value;
+            return new MongoDB.Driver.MongoClient(options.ConnectionString);
+        });
         services.AddSingleton<MongoDbContext>();
         services.AddSingleton<ICacheService, RedisCacheService>();
         services.AddScoped<AiVideoStudio.Domain.Interfaces.IUserRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.UserRepository>();
@@ -132,6 +138,16 @@ public static class DependencyInjection
         services.AddHostedService(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Workflow.WorkflowWorker>());
         services.AddHostedService<AiVideoStudio.Infrastructure.Workflow.WorkflowIndexInitializer>();
 
+        // Task 5.5 AI Generation Orchestration Engine
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.Orchestration.IGenerationWorkflowRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.GenerationWorkflowRepository>();
+        services.AddSingleton<AiVideoStudio.Application.Features.Orchestration.Services.IWorkflowSchedulerEngine, AiVideoStudio.Application.Features.Orchestration.Services.WorkflowSchedulerEngine>();
+        services.AddSingleton<AiVideoStudio.Application.Features.Orchestration.Services.IOrchestrationDispatcher, AiVideoStudio.Application.Features.Orchestration.Services.OrchestrationDispatcher>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.Orchestration.IGenerationOrchestrator, AiVideoStudio.Application.Features.Orchestration.Services.GenerationOrchestrator>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.Orchestration.OrchestrationMetrics>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.Orchestration.GenerationWorkflowWorker>();
+        services.AddHostedService(provider => provider.GetRequiredService<AiVideoStudio.Infrastructure.Orchestration.GenerationWorkflowWorker>());
+        services.AddScoped<AiVideoStudio.Infrastructure.Orchestration.WorkflowOrchestratorHealthCheck>();
+
         // Production operations foundation
         services.AddOptions<SystemOptions>().Bind(configuration.GetSection(SystemOptions.SectionName)).ValidateDataAnnotations().ValidateOnStart();
         services.AddOptions<WorkflowOptions>().Bind(configuration.GetSection(WorkflowOptions.SectionName));
@@ -157,6 +173,41 @@ public static class DependencyInjection
         services.AddScoped<ICorrelationIdProvider>(p => p.GetRequiredService<AiVideoStudio.Infrastructure.Operations.RequestContext>());
         services.AddHostedService<AiVideoStudio.Infrastructure.Operations.MaintenanceWorker>();
 
+        // Task 5.12 Platform Administration, Observability & Operations Center
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.OperationsAdmin.IPlatformAdministrationRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.PlatformAdministrationRepository>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.OperationsAdmin.IFeatureFlagService, AiVideoStudio.Application.Features.OperationsAdmin.Services.FeatureFlagService>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.OperationsAdmin.IAuditService, AiVideoStudio.Application.Features.OperationsAdmin.Services.AuditService>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.OperationsAdmin.IIncidentManager, AiVideoStudio.Application.Features.OperationsAdmin.Services.IncidentManager>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.OperationsAdmin.IBackupService, AiVideoStudio.Application.Features.OperationsAdmin.Services.BackupService>();
+        services.AddSingleton<AiVideoStudio.Application.Interfaces.OperationsAdmin.ILogExplorerService, AiVideoStudio.Application.Features.OperationsAdmin.Services.LogExplorerService>();
+        services.AddSingleton<AiVideoStudio.Application.Interfaces.OperationsAdmin.IMetricsExplorerService, AiVideoStudio.Application.Features.OperationsAdmin.Services.MetricsExplorerService>();
+        services.AddSingleton<AiVideoStudio.Application.Interfaces.OperationsAdmin.ITraceExplorerService, AiVideoStudio.Application.Features.OperationsAdmin.Services.TraceExplorerService>();
+        services.AddSingleton<AiVideoStudio.Application.Interfaces.OperationsAdmin.IPlatformHealthService, AiVideoStudio.Application.Features.OperationsAdmin.Services.PlatformHealthService>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.OperationsAdmin.IPlatformAdministrationService, AiVideoStudio.Application.Features.OperationsAdmin.Services.PlatformAdministrationService>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.OperationsAdmin.Telemetry.PlatformTelemetry>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.OperationsAdmin.Health.PlatformHealthCheck>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.OperationsAdmin.Workers.RestoreWorker>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.OperationsAdmin.Workers.JobReplayWorker>();
+        services.AddHostedService<AiVideoStudio.Infrastructure.OperationsAdmin.Workers.OperationsDashboardWorker>();
+        services.AddHostedService<AiVideoStudio.Infrastructure.OperationsAdmin.Workers.BackupWorker>();
+        services.AddHostedService<AiVideoStudio.Infrastructure.OperationsAdmin.Workers.IncidentWorker>();
+        services.AddHostedService<AiVideoStudio.Infrastructure.OperationsAdmin.Workers.MaintenanceWorkerService>();
+
+        // Task 5.13 Platform Security, Governance, Compliance & Zero Trust Engine
+        services.AddScoped<AiVideoStudio.Domain.Interfaces.SecurityGovernance.ISecurityRepository, AiVideoStudio.Infrastructure.Mongo.Repositories.SecurityRepository>();
+        services.AddSingleton<AiVideoStudio.Application.Interfaces.SecurityGovernance.ISecretsManager, AiVideoStudio.Application.Features.SecurityGovernance.Services.SecretsManager>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.SecurityGovernance.IPolicyEngine, AiVideoStudio.Application.Features.SecurityGovernance.Services.PolicyEngine>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.SecurityGovernance.IRiskEngine, AiVideoStudio.Application.Features.SecurityGovernance.Services.RiskEngine>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.SecurityGovernance.IThreatDetectionService, AiVideoStudio.Application.Features.SecurityGovernance.Services.ThreatDetectionService>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.SecurityGovernance.IComplianceService, AiVideoStudio.Application.Features.SecurityGovernance.Services.ComplianceService>();
+        services.AddScoped<AiVideoStudio.Application.Interfaces.SecurityGovernance.ISecurityService, AiVideoStudio.Application.Features.SecurityGovernance.Services.SecurityService>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.SecurityGovernance.Telemetry.SecurityTelemetry>();
+        services.AddSingleton<AiVideoStudio.Infrastructure.SecurityGovernance.Health.SecurityHealthCheck>();
+        services.AddHostedService<AiVideoStudio.Infrastructure.SecurityGovernance.Workers.ThreatDetectionWorker>();
+        services.AddHostedService<AiVideoStudio.Infrastructure.SecurityGovernance.Workers.RiskCalculationWorker>();
+        services.AddHostedService<AiVideoStudio.Infrastructure.SecurityGovernance.Workers.ComplianceWorker>();
+        services.AddHostedService<AiVideoStudio.Infrastructure.SecurityGovernance.Workers.SecretRotationWorker>();
+
         services.AddTransient<ISeeder, UserSeeder>();
         services.AddTransient<ISeeder, RoleSeeder>();
         services.AddTransient<ISeeder, WorkspaceSeeder>();
@@ -166,5 +217,3 @@ public static class DependencyInjection
         return services;
     }
 }
-
-

@@ -19,6 +19,7 @@ using System;
 using System.IO;
 using System.Text;
 
+EnvLoader.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 // Setup Serilog
@@ -57,6 +58,8 @@ builder.Services.AddOptions<StorageOptions>()
     .Bind(builder.Configuration.GetSection(StorageOptions.SectionName))
     .ValidateDataAnnotations()
     .ValidateOnStart();
+
+builder.Services.Configure<PasswordPolicyOptions>(builder.Configuration.GetSection(PasswordPolicyOptions.SectionName));
 
 var jwtConfiguration = builder.Configuration
     .GetSection(JwtOptions.SectionName)
@@ -125,13 +128,12 @@ builder.Services.AddSwaggerGen(c =>
     }
 });
 
-// Setup CORS from config
-var corsOrigins = builder.Configuration.GetSection("CorsOrigins").Get<string[]>() ?? Array.Empty<string>();
+// Setup CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("DefaultCorsPolicy", policy =>
     {
-        policy.WithOrigins(corsOrigins)
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -148,6 +150,17 @@ var app = builder.Build();
 
 var storageOptions = app.Services.GetRequiredService<IOptions<StorageOptions>>().Value;
 Directory.CreateDirectory(Path.GetFullPath(storageOptions.BasePath));
+
+try
+{
+    using var scope = app.Services.CreateScope();
+    var seedRunner = scope.ServiceProvider.GetRequiredService<AiVideoStudio.Infrastructure.Data.Seed.SeedRunner>();
+    await seedRunner.RunAsync();
+}
+catch (Exception ex)
+{
+    Log.Warning(ex, "Could not run database seeders on startup.");
+}
 
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();

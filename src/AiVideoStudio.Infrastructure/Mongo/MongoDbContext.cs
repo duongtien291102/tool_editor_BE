@@ -39,4 +39,8 @@ public class MongoDbContext
     public IMongoCollection<SystemConfiguration> SystemConfigurations => Database.GetCollection<SystemConfiguration>("systemConfigurations");
     public IMongoCollection<MaintenanceTask> MaintenanceTasks => Database.GetCollection<MaintenanceTask>("maintenanceTasks");
     public IMongoCollection<Setting> Settings => Database.GetCollection<Setting>("settings");
+    public IMongoCollection<AiVideoStudio.Domain.Entities.Orchestration.GenerationWorkflow> GenerationWorkflows => Database.GetCollection<AiVideoStudio.Domain.Entities.Orchestration.GenerationWorkflow>("generation_workflows");
+    public IMongoCollection<AiVideoStudio.Domain.Entities.Orchestration.OrchestrationStep> WorkflowSteps => Database.GetCollection<AiVideoStudio.Domain.Entities.Orchestration.OrchestrationStep>("workflow_steps");
+    public IMongoCollection<AiVideoStudio.Domain.Entities.Orchestration.WorkflowHistory> WorkflowHistories => Database.GetCollection<AiVideoStudio.Domain.Entities.Orchestration.WorkflowHistory>("workflow_histories");
 }
+

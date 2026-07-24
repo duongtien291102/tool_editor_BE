@@ -1,0 +1,10 @@
+.env
+.env.local
+.env.development
+.env.production
+**/bin/
+**/obj/
+*.user
+*.suo
+.vs/
+.idea/

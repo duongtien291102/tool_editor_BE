@@ -58,6 +58,15 @@ public sealed class WorkflowController:ControllerBase
     [HttpGet("workflows/{id}/execution")][ProducesResponseType(typeof(ApiResponse<WorkflowExecutionDto>),200)]
     public async Task<IActionResult> Execution(string id,CancellationToken ct){var x=await _mediator.Send(new GetWorkflowExecutionQuery(id),ct);return x.IsSuccess?Ok(ApiResponse<WorkflowExecutionDto>.SuccessResponse(x.Value!)):Failure(x);}
 
+    /// <summary>Get workflow status.</summary>
+    [HttpGet("workflows/{id}/status")][ProducesResponseType(typeof(ApiResponse<object>),200)]
+    public async Task<IActionResult> Status(string id,CancellationToken ct){var x=await _mediator.Send(new AiVideoStudio.Application.Features.Orchestration.Commands.GetGenerationWorkflowStatusQuery(id),ct);if(x.IsSuccess)return Ok(ApiResponse<object>.SuccessResponse(x.Value!));var legacy=await _mediator.Send(new GetWorkflowByIdQuery(id),ct);return legacy.IsSuccess?Ok(ApiResponse<object>.SuccessResponse(legacy.Value!.Status)):Failure(x);}
+
+    /// <summary>Get workflow execution history.</summary>
+    [HttpGet("workflows/{id}/history")][ProducesResponseType(typeof(ApiResponse<object>),200)]
+    public async Task<IActionResult> History(string id,CancellationToken ct){var x=await _mediator.Send(new AiVideoStudio.Application.Features.Orchestration.Commands.GetGenerationWorkflowHistoryQuery(id),ct);return x.IsSuccess?Ok(ApiResponse<object>.SuccessResponse(x.Value!)):Failure(x);}
+
+
     private async Task<IActionResult> Send(IRequest<Result> command,string message,CancellationToken ct){var x=await _mediator.Send(command,ct);return x.IsSuccess?Ok(ApiResponse<object>.SuccessResponse(null!,message)):Failure(x);}
     private IActionResult Failure(Result x){var body=ApiResponse<object>.FailureResponse(x.Error.Message,x.ValidationErrors,x.Error.Code);if(x.Error.Code.Contains("Unauthorized",StringComparison.Ordinal))return Unauthorized(body);if(x.Error.Code.Contains("Forbidden",StringComparison.Ordinal))return StatusCode(403,body);if(x.Error.Code.Contains("NotFound",StringComparison.Ordinal))return NotFound(body);return BadRequest(body);}
 }

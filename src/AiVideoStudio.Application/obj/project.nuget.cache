@@ -1,15 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "weIUReKfoFs=",
+  "dgSpecHash": "J58n1uvoLOo=",
   "success": true,
-  "projectFilePath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
+  "projectFilePath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\minht\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\minht\\.nuget\\packages\\fluentvalidation\\11.10.0\\fluentvalidation.11.10.0.nupkg.sha512",
     "C:\\Users\\minht\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.10.0\\fluentvalidation.dependencyinjectionextensions.11.10.0.nupkg.sha512",
     "C:\\Users\\minht\\.nuget\\packages\\mediatr\\12.4.1\\mediatr.12.4.1.nupkg.sha512",
     "C:\\Users\\minht\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
-    "C:\\Users\\minht\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\minht\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.0\\microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512",
+    "C:\\Users\\minht\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.0\\microsoft.extensions.logging.abstractions.9.0.0.nupkg.sha512",
     "C:\\Users\\minht\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",
     "C:\\Users\\minht\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
     "C:\\Users\\minht\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
@@ -22,9 +23,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'AutoMapper' 13.0.1 has a known high severity vulnerability, https://github.com/advisories/GHSA-rvv3-g6hj-g44x",
-      "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
+      "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
       "warningLevel": 1,
-      "filePath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
+      "filePath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
       "libraryId": "AutoMapper",
       "targetGraphs": [
         "net9.0"

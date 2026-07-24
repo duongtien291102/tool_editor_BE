@@ -33,11 +33,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj",
+      "projectUniqueName": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj",
       "projectName": "AiVideoStudio.Domain",
-      "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj",
+      "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj",
       "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-      "outputPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\obj\\",
+      "outputPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -59,8 +59,8 @@
           "framework": "net9.0",
           "targetAlias": "net9.0",
           "projectReferences": {
-            "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
-              "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
+            "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
+              "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
             }
           }
         }

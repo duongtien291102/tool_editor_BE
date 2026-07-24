@@ -19,6 +19,27 @@
         <member name="M:AiVideoStudio.Api.Controllers.v1.ExportController.Retry(System.String,System.Threading.CancellationToken)">
             <summary>Retry a failed export.</summary>
         </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.GenerationWorkflowController.Create(AiVideoStudio.Application.Features.Orchestration.DTOs.CreateGenerationWorkflowRequest,System.Threading.CancellationToken)">
+            <summary>Create a new AI Generation Orchestration Workflow.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.GenerationWorkflowController.Get(System.String,System.Threading.CancellationToken)">
+            <summary>Get an AI Generation Workflow by Id.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.GenerationWorkflowController.GetStatus(System.String,System.Threading.CancellationToken)">
+            <summary>Get status of an AI Generation Workflow.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.GenerationWorkflowController.GetHistory(System.String,System.Threading.CancellationToken)">
+            <summary>Get execution history logs of an AI Generation Workflow.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.GenerationWorkflowController.Retry(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Retry a failed AI Generation Workflow.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.GenerationWorkflowController.Resume(System.String,System.Threading.CancellationToken)">
+            <summary>Resume a paused or waiting AI Generation Workflow.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.GenerationWorkflowController.Cancel(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Cancel an active or queued AI Generation Workflow.</summary>
+        </member>
         <member name="M:AiVideoStudio.Api.Controllers.v1.MediaController.Upload(AiVideoStudio.Api.Controllers.v1.MediaUploadForm,System.Threading.CancellationToken)">
             <summary>
             Uploads a media asset for a project using multipart/form-data.
@@ -357,6 +378,12 @@
         </member>
         <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Execution(System.String,System.Threading.CancellationToken)">
             <summary>Get the most recent workflow execution.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.Status(System.String,System.Threading.CancellationToken)">
+            <summary>Get workflow status.</summary>
+        </member>
+        <member name="M:AiVideoStudio.Api.Controllers.v1.WorkflowController.History(System.String,System.Threading.CancellationToken)">
+            <summary>Get workflow execution history.</summary>
         </member>
     </members>
 </doc>

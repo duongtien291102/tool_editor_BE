@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\AiVideoStudio.UnitTests.csproj": {}
+    "e:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\AiVideoStudio.UnitTests.csproj": {}
   },
   "projects": {
-    "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj": {
+    "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
+        "projectUniqueName": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
         "projectName": "AiVideoStudio.Application",
-        "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
+        "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj",
         "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-        "outputPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\obj\\",
+        "outputPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,11 +33,11 @@
             "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj"
               },
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
               }
             }
           }
@@ -70,6 +70,10 @@
             "MediatR": {
               "target": "Package",
               "version": "[12.4.1, )"
+            },
+            "Microsoft.Extensions.Logging.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             }
           },
           "imports": [
@@ -106,14 +110,14 @@
         }
       }
     },
-    "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj": {
+    "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj",
+        "projectUniqueName": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj",
         "projectName": "AiVideoStudio.Domain",
-        "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj",
+        "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj",
         "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-        "outputPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\obj\\",
+        "outputPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -135,8 +139,8 @@
             "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
               }
             }
           }
@@ -191,14 +195,14 @@
         }
       }
     },
-    "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj": {
+    "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj",
+        "projectUniqueName": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj",
         "projectName": "AiVideoStudio.Infrastructure",
-        "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj",
+        "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-        "outputPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\obj\\",
+        "outputPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -220,14 +224,14 @@
             "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj"
               },
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj"
               },
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
               }
             }
           }
@@ -304,14 +308,14 @@
         }
       }
     },
-    "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
+    "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj",
+        "projectUniqueName": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj",
         "projectName": "AiVideoStudio.Shared",
-        "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj",
+        "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj",
         "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-        "outputPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\obj\\",
+        "outputPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -385,14 +389,14 @@
         }
       }
     },
-    "E:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\AiVideoStudio.UnitTests.csproj": {
+    "e:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\AiVideoStudio.UnitTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\AiVideoStudio.UnitTests.csproj",
+        "projectUniqueName": "e:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\AiVideoStudio.UnitTests.csproj",
         "projectName": "AiVideoStudio.UnitTests",
-        "projectPath": "E:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\AiVideoStudio.UnitTests.csproj",
+        "projectPath": "e:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\AiVideoStudio.UnitTests.csproj",
         "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-        "outputPath": "E:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\obj\\",
+        "outputPath": "e:\\Tool_editor\\tool_editor_BE\\tests\\AiVideoStudio.UnitTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -414,17 +418,17 @@
             "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Application\\AiVideoStudio.Application.csproj"
               },
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Domain\\AiVideoStudio.Domain.csproj"
               },
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Infrastructure\\AiVideoStudio.Infrastructure.csproj"
               },
-              "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
-                "projectPath": "E:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
+              "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj": {
+                "projectPath": "e:\\Tool_editor\\tool_editor_BE\\src\\AiVideoStudio.Shared\\AiVideoStudio.Shared.csproj"
               }
             }
           }
