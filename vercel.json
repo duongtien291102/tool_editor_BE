@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/AiVideoStudio.Api/AiVideoStudio.Api.csproj",
+      "use": "@vercel/dotnet"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/AiVideoStudio.Api/AiVideoStudio.Api.csproj"
+    }
+  ]
+}
