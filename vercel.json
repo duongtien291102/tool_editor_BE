@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "src/AiVideoStudio.Api/AiVideoStudio.Api.csproj",
-      "use": "@vercel/dotnet"
+      "src": "Dockerfile.vercel",
+      "use": "@vercel/docker"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/AiVideoStudio.Api/AiVideoStudio.Api.csproj"
+      "dest": "/"
     }
   ]
 }
