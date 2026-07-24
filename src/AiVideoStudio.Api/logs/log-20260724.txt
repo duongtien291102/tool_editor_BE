@@ -115,3 +115,14 @@
 2026-07-24 10:07:31.412 +07:00 [INF] HTTP Request Completed {"MachineName":"JAIKADUONG","Environment":"Development","ApplicationVersion":"1.0.0.0","TraceId":"d5e88826cdd0dc139587eb4bd4df8b93","Payload":{"Method":"POST","Path":{"Value":"/api/v1/auth/login","HasValue":true,"$type":"PathString"},"StatusCode":200,"DurationMs":737,"CorrelationId":"4d6e2a5e-61f3-4227-a520-3624044637b5","UserId":"Anonymous","IP":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"}}
 2026-07-24 10:07:31.433 +07:00 [INF] HTTP Request Completed {"MachineName":"JAIKADUONG","Environment":"Development","ApplicationVersion":"1.0.0.0","TraceId":"7729a7e4739bd35755e580a8c06befb2","Payload":{"Method":"OPTIONS","Path":{"Value":"/api/v1/users/me","HasValue":true,"$type":"PathString"},"StatusCode":204,"DurationMs":0,"CorrelationId":"da309cdf-ca41-459a-b1ff-69c9c33f0240","UserId":"Anonymous","IP":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"}}
 2026-07-24 10:07:31.525 +07:00 [INF] HTTP Request Completed {"MachineName":"JAIKADUONG","Environment":"Development","ApplicationVersion":"1.0.0.0","TraceId":"8796b6cba7ee4474901f83c1e31dd0e0","Payload":{"Method":"GET","Path":{"Value":"/api/v1/users/me","HasValue":true,"$type":"PathString"},"StatusCode":200,"DurationMs":80,"CorrelationId":"75e7bbb4-a064-44f1-b408-473bee113c63","UserId":"admin","IP":"::1","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"}}
+2026-07-24 10:23:40.785 +07:00 [INF] RenderWorker is starting.
+2026-07-24 10:23:40.810 +07:00 [INF] ExportWorker started.
+2026-07-24 10:23:40.929 +07:00 [INF] GenerationWorkflowWorker started. Polling queue for ready workflows...
+2026-07-24 10:23:40.940 +07:00 [INF] OperationsDashboardWorker started.
+2026-07-24 10:23:40.941 +07:00 [INF] BackupWorker started.
+2026-07-24 10:23:40.942 +07:00 [INF] IncidentWorker started.
+2026-07-24 10:23:40.942 +07:00 [INF] MaintenanceWorkerService started.
+2026-07-24 10:23:40.943 +07:00 [INF] ThreatDetectionWorker started.
+2026-07-24 10:23:40.944 +07:00 [INF] RiskCalculationWorker started.
+2026-07-24 10:23:40.945 +07:00 [INF] ComplianceWorker started.
+2026-07-24 10:23:40.945 +07:00 [INF] SecretRotationWorker started.

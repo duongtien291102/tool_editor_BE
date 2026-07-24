@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using AiVideoStudio.Domain.Entities;
 using AiVideoStudio.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
+using System.Security.Authentication;
 
 namespace AiVideoStudio.Infrastructure.Mongo;
 
@@ -10,9 +11,21 @@ public class MongoDbContext
     public IMongoClient Client { get; }
     public IMongoDatabase Database { get; }
 
-    public MongoDbContext(IOptions<MongoOptions> options)
+    public MongoDbContext(IOptions<MongoOptions> options, IMongoClient? client = null)
     {
-        Client = new MongoClient(options.Value.ConnectionString);
+        if (client != null)
+        {
+            Client = client;
+        }
+        else
+        {
+            var settings = MongoClientSettings.FromConnectionString(options.Value.ConnectionString);
+            settings.SslSettings = new SslSettings
+            {
+                EnabledSslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13
+            };
+            Client = new MongoClient(settings);
+        }
         Database = Client.GetDatabase(options.Value.DatabaseName);
     }
 
@@ -43,4 +56,3 @@ public class MongoDbContext
     public IMongoCollection<AiVideoStudio.Domain.Entities.Orchestration.OrchestrationStep> WorkflowSteps => Database.GetCollection<AiVideoStudio.Domain.Entities.Orchestration.OrchestrationStep>("workflow_steps");
     public IMongoCollection<AiVideoStudio.Domain.Entities.Orchestration.WorkflowHistory> WorkflowHistories => Database.GetCollection<AiVideoStudio.Domain.Entities.Orchestration.WorkflowHistory>("workflow_histories");
 }
-

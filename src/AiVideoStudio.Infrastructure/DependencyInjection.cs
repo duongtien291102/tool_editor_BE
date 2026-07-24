@@ -52,7 +52,12 @@ public static class DependencyInjection
         services.AddSingleton<MongoDB.Driver.IMongoClient>(sp =>
         {
             var options = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<MongoOptions>>().Value;
-            return new MongoDB.Driver.MongoClient(options.ConnectionString);
+            var settings = MongoDB.Driver.MongoClientSettings.FromConnectionString(options.ConnectionString);
+            settings.SslSettings = new MongoDB.Driver.SslSettings
+            {
+                EnabledSslProtocols = System.Security.Authentication.SslProtocols.Tls12 | System.Security.Authentication.SslProtocols.Tls13
+            };
+            return new MongoDB.Driver.MongoClient(settings);
         });
         services.AddSingleton<MongoDbContext>();
         services.AddSingleton<ICacheService, RedisCacheService>();
